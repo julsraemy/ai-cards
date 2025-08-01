@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI in Information Science - Interactive Venn Diagram Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .instructions {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .cards-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            height: fit-content;
+        }
+
+        .cards-title {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .card-item {
+            background: white;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .card-item:active {
+            transform: scale(0.98);
+        }
+
+        .card-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #355cc9;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.3rem;
+            padding-right: 2rem;
+        }
+
+        .card-pov {
+            font-size: 0.7rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .venn-container {
+            position: relative;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .venn-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .drop-zone {
+            fill-opacity: 0.3;
+            stroke-width: 3;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            fill-opacity: 0.6;
+            stroke-width: 5;
+        }
+
+        .working-zone { fill: #ff4444; stroke: #cc0000; }
+        .designing-zone { fill: #4444ff; stroke: #0000cc; }
+        .developing-zone { fill: #ffff44; stroke: #cccc00; }
+
+        .zone-label {
+            font-size: 16px;
+            font-weight: 700;
+            fill: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .placed-card {
+            position: absolute;
+            background: white;
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            cursor: grab;
+            min-width: 80px;
+            z-index: 10;
+        }
+
+        .placed-card:hover {
+            transform: scale(1.05);
+            z-index: 20;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .legend {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: white;
+        }
+
+        .legend h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .legend-section {
+            margin-bottom: 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-title {
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .colour-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .red { background-color: #ff4444; }
+        .blue { background-color: #4444ff; }
+        .yellow { background-color: #ffff44; }
+        .purple { background-color: #aa44aa; }
+        .orange { background-color: #ff9944; }
+        .brown { background-color: #996633; }
+
+        .legend-items {
+            font-size: 0.7rem;
+            line-height: 1.3;
+            padding-left: 0.5rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            color: #355cc9;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-pov {
+            background: linear-gradient(135deg, #355cc9, #4a90e2);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .modal-description {
+            color: #333;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .modal-link {
+            background: #355cc9;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-link:hover {
+            background: #2a4aa3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.3);
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .click-hint {
+            font-size: 0.6rem;
+            color: #999;
+            text-align: center;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .cards-panel {
+                order: 2;
+            }
+            
+            .venn-container {
+                height: 500px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .venn-container {
+                height: 400px;
+            }
+            
+            .zone-label {
+                font-size: 12px;
+            }
+            
+            .placed-card {
+                font-size: 0.6rem;
+                padding: 0.3rem;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI in Information Science - Interactive Exercise</h1>
+        <div class="subtitle">Drag cards to the appropriate regions</div>
+    </div>
+
+    <div class="instructions">
+        <strong>Instructions:</strong> 
+        • <strong>Click</strong> any card to view detailed descriptions and links
+        • <strong>Drag</strong> cards from the left panel and drop them onto the Venn diagram regions
+        • <strong>Double-click</strong> placed cards to return them to the panel
+        • Consider each card's Point of View (POV) to determine the appropriate category
+    </div>
+
+    <div class="main-container">
+        <div class="cards-panel">
+            <div class="cards-title">Available Cards</div>
+            <div id="cards-container">
+                <div class="card-item" data-card="1" draggable="true">
+                    <div class="card-number">01</div>
+                    <div class="card-title">Annif</div>
+                    <div class="card-pov">Subject Cataloger</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="2" draggable="true">
+                    <div class="card-number">02</div>
+                    <div class="card-title">GenAI Usage Guidelines</div>
+                    <div class="card-pov">University Librarian</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="3" draggable="true">
+                    <div class="card-number">03</div>
+                    <div class="card-title">RAG Chatbot</div>
+                    <div class="card-pov">Digital Archivist</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="4" draggable="true">
+                    <div class="card-number">04</div>
+                    <div class="card-title">MCP + IIIF Integration</div>
+                    <div class="card-pov">Software Developer</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="5" draggable="true">
+                    <div class="card-number">05</div>
+                    <div class="card-title">Image Similarity Search</div>
+                    <div class="card-pov">Archivist</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="6" draggable="true">
+                    <div class="card-number">06</div>
+                    <div class="card-title">E-Periodica Next Level Access</div>
+                    <div class="card-pov">Metadata Librarian</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="7" draggable="true">
+                    <div class="card-number">07</div>
+                    <div class="card-title">VSA-AAS White Paper on ML</div>
+                    <div class="card-pov">Archive Director</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="8" draggable="true">
+                    <div class="card-number">08</div>
+                    <div class="card-title">AI vs Open Data Risks</div>
+                    <div class="card-pov">Data Governance Specialist</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="9" draggable="true">
+                    <div class="card-number">09</div>
+                    <div class="card-title">Open Library Data Dumps</div>
+                    <div class="card-pov">Data Science Specialist</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="10" draggable="true">
+                    <div class="card-number">10</div>
+                    <div class="card-title">HTR with Transkribus</div>
+                    <div class="card-pov">Medieval Manuscripts Archivist</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="11" draggable="true">
+                    <div class="card-number">11</div>
+                    <div class="card-title">IIIF Tsukushi Viewer</div>
+                    <div class="card-pov">Systems Librarian</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+                <div class="card-item" data-card="12" draggable="true">
+                    <div class="card-number">12</div>
+                    <div class="card-title">eluxemburgensia Chatbot</div>
+                    <div class="card-pov">Historian</div>
+                    <div class="click-hint">Click for details</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="venn-container" id="venn-container">
+            <svg class="venn-svg" viewBox="0 0 800 600">
+                <!-- Working with AI Circle -->
+                <circle cx="280" cy="220" r="140" class="drop-zone working-zone" data-zone="working"/>
+                
+                <!-- Designing with AI Circle -->
+                <circle cx="520" cy="220" r="140" class="drop-zone designing-zone" data-zone="designing"/>
+                
+                <!-- Developing for AI Circle -->
+                <circle cx="400" cy="350" r="140" class="drop-zone developing-zone" data-zone="developing"/>
+
+                <!-- Zone Labels -->
+                <text x="200" y="150" class="zone-label">Working with AI</text>
+                <text x="600" y="150" class="zone-label">Designing with AI</text>
+                <text x="400" y="480" class="zone-label">Developing for AI</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Modal for card details -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-pov" id="modalPOV"></div>
+            </div>
+            <div class="modal-description" id="modalDescription"></div>
+            <div class="modal-links" id="modalLinks"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="resetCards()">Reset All Cards</button>
+        <button class="btn" onclick="showSolution()">Show Proposed Solution</button>
+        <button class="btn" onclick="hideSolution()">Hide Solution</button>
+    </div>
+
+    <div class="legend" id="solution-legend" style="display: none;">
+        <h3>Proposed Solution - Card Distribution by Category</h3>
+        
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator red"></span>
+                Only Working with AI (3 cards):
+            </div>
+            <div class="legend-items">
+                01 - Annif (using existing AI tool for cataloguing)<br>
+                10 - HTR with Transkribus (using existing AI service)<br>
+                12 - eluxemburgensia Chatbot (historian using AI tool for research)
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator blue"></span>
+                Only Designing with AI (2 cards):
+            </div>
+            <div class="legend-items">
+                07 - VSA-AAS White Paper on ML (policy framework development)<br>
+                08 - AI vs Open Data Risks (risk assessment and governance)
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator yellow"></span>
+                Only Developing for AI (3 cards):
+            </div>
+            <div class="legend-items">
+                04 - MCP + IIIF Integration (API development for AI systems)<br>
+                06 - E-Periodica Next Level Access (building AI infrastructure for metadata)<br>
+                09 - Open Library Data Dumps (training data for AI models)
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator purple"></span>
+                Working + Designing (2 cards):
+            </div>
+            <div class="legend-items">
+                02 - GenAI Citation Guidelines (policy creation + implementation)<br>
+                11 - IIIF Tsukushi Viewer (system implementation + user interface design)
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator orange"></span>
+                Working + Developing (1 card):
+            </div>
+            <div class="legend-items">
+                05 - Image Similarity Search (system setup + daily use)
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <div class="legend-title">
+                <span class="colour-indicator brown"></span>
+                All Three Categories (1 card):
+            </div>
+            <div class="legend-items">
+                03 - RAG Chatbot (building system + policy framework + daily use)
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let draggedCard = null;
+        let placedCards = new Map();
+
+        // Card titles for display
+        const cardTitles = {
+            1: "Annif",
+            2: "GenAI Guidelines",
+            3: "RAG Chatbot",
+            4: "MCP + IIIF",
+            5: "Image Similarity",
+            6: "E-Periodica NLA",
+            7: "VSA-AAS Paper",
+            8: "AI vs Open Data",
+            9: "Open Library",
+            10: "HTR Transkribus",
+            11: "Tsukushi Viewer",
+            12: "eluxemburgensia"
+        };
+
+        // Card detailed information
+        const cardDetails = {
+            1: {
+                title: "Annif",
+                pov: "POV: Subject Cataloger at National Library",
+                description: `<p>Annif is an automated subject indexing tool that uses machine learning to suggest appropriate subject headings and classifications for library materials. Instead of librarians manually reading through every document, Annif can analyse texts and suggest relevant Library of Congress Subject Headings.</p>
+                <p>This speeds up the cataloguing process significantly whilst maintaining quality, as human catalogers still review and validate the AI's suggestions before they're finalised.</p>`,
+                links: [
+                    { text: "🔗 Official Site", url: "https://annif.org/" },
+                    { text: "💻 GitHub", url: "https://github.com/NatLibFi/Annif" }
+                ]
+            },
+            2: {
+                title: "GenAI Citation Guidelines",
+                pov: "POV: University Librarian",
+                description: `<p>University libraries like the University of Geneva are creating practical guides to help students properly reference and cite generative AI tools such as ChatGPT, Claude, or Gemini in their academic work. These guidelines are essential for maintaining academic integrity whilst embracing new technologies.</p>
+                <p>The guides cover citation formats for different AI tools, requirements for disclosing AI use in assignments, and how to fact-check AI-generated content whilst properly attributing AI assistance in academic work.</p>`,
+                links: [
+                    { text: "📚 UNIGE Guide", url: "https://www.unige.ch/biblio/en/news/archive/2024/guide-iag/" },
+                    { text: "🏛️ Harvard Guide", url: "https://guides.library.harvard.edu/artificial-intelligence" }
+                ]
+            },
+            3: {
+                title: "Feeding a RAG Chatbot",
+                pov: "POV: Digital Archivist",
+                description: `<p>Retrieval-Augmented Generation (RAG) is a system that combines an institution's specific knowledge with large language models to provide accurate, contextual answers about collections and institutional history. The Swiss Federal Archives has developed such a system to help researchers navigate their vast collections.</p>
+                <p>The process involves curating authoritative finding aids, creating knowledge graphs showing relationships between archives, and deploying a conversational interface. This allows researchers to ask natural language questions and receive accurate, source-backed answers.</p>`,
+                links: [
+                    { text: "💻 Swiss Fed Archives", url: "https://github.com/SwissFederalArchives/sfa-chat-graph" },
+                    { text: "📊 LangChain RAG", url: "https://python.langchain.com/docs/tutorials/rag/" }
+                ]
+            },
+            4: {
+                title: "MCP + IIIF AI Integration",
+                pov: "POV: Software Developer in Cultural Heritage Institution",
+                description: `<p>This involves developing Model Context Protocol (MCP) servers that enable AI systems to access and analyse International Image Interoperability Framework (IIIF)-served cultural heritage images. IIIF is a standard way that libraries and museums deliver high-quality images online, whilst MCP provides a standardised way for AI tools to access external data sources.</p>
+                <p>The implementation includes parsing IIIF manifests, developing MCP servers for AI communication, integrating AI models for visual analysis, and creating metadata enrichment workflows. Projects like Yale's mcp-iiif-images demonstrate this integration.</p>`,
+                links: [
+                    { text: "💻 Yale MCP-IIIF", url: "https://github.com/mikeapp/mcp-iiif-images" },
+                    { text: "🤗 Riksarkivet Demo", url: "https://huggingface.co/spaces/Riksarkivet/iiif_mcp_docs" }
+                ]
+            },
+            5: {
+                title: "Image Similarity in Archives",
+                pov: "POV: Archivist",
+                description: `<p>Archipanion is an AI-powered search system based on vitrivr technology that allows users to search for visually similar images in large photographic archives. The City of Bern Archives uses this system to help researchers explore their historical photograph collection using visual similarity rather than traditional text-based searching.</p>
+                <p>Users can upload an image or select one from the collection, and the system finds photographs with similar visual characteristics. This helps discover unexpected connections, identify duplicates, and enables exploratory browsing that traditional keyword searching might miss.</p>`,
+                links: [
+                    { text: "📷 Bern Archives", url: "https://stadtbern.archipanion.com/" },
+                    { text: "📊 vitrivr Research", url: "https://vitrivr.org/" }
+                ]
+            },
+            6: {
+                title: "E-Periodica Next Level Access",
+                pov: "POV: Metadata Librarian",
+                description: `<p>ETH Zurich Library's E-Periodica Next Level Access project demonstrates large-scale implementation of AI for cultural heritage. The project uses machine learning for named entity recognition and vector embeddings to semantically match and link millions of person references to authority files like the Gemeinsame Normdatei.</p>
+                <p>While the scale is impressive (10 million digitised pages processed, 40 million person entity references extracted), the project emphasises local, resource-efficient solutions rather than relying on commercial AI services. This allows the library to build internal expertise and maintain control over their data processing workflows.</p>`,
+                links: [
+                    { text: "🔗 NLA Portal", url: "https://nla.e-periodica.ch/" },
+                    { text: "📚 ETH Library", url: "https://www.library.ethz.ch/" }
+                ]
+            },
+            7: {
+                title: "VSA-AAS White Paper on ML",
+                pov: "POV: Archive Director",
+                description: `<p>The VSA-AAS (Association of Swiss Archivists) white paper on machine learning represents professional thinking about AI implementation in archives. The concept of "fluid metadata" that can evolve aligns with understanding information as dynamic rather than static, emphasising human-machine collaboration.</p>
+                <p>Key concepts include "depth indexing" that goes beyond traditional cataloging, focusing on text recognition, linguistic processing, and multimedia retrieval. The emphasis is on machines excelling at information value while humans provide evidence value and context through "hybrid intelligence."</p>`,
+                links: [
+                    { text: "📚 VSA-AAS Resource", url: "https://vsa-aas.ch/ressourcen/zugang-und-vermittlung/maschinelles-lernen-im-archiv/" },
+                    { text: "📄 White Paper PDF", url: "https://vsa-aas.ch/wp-content/uploads/2024/08/MachineLearning_im_Archiv_Whitepaper_2024-08-08_en.pdf" }
+                ]
+            },
+            8: {
+                title: "AI Chatbots vs Open Data Platforms",
+                pov: "POV: Data Governance Specialist",
+                description: `<p>There are growing concerns about what happens when AI chatbots potentially replace direct access to open data platforms and databases. Whilst chatbots can make information more accessible, they also introduce risks of information gatekeeping and reduced transparency in how information is retrieved.</p>
+                <p>Key risks include "black box" responses where users cannot see the reasoning behind answers, reduced critical thinking as people accept AI responses without verification, and dependency on AI intermediaries rather than learning to navigate original sources.</p>`,
+                links: [
+                    { text: "📊 Research Study", url: "https://www.nature.com/articles/d41586-023-00288-7" },
+                    { text: "🌐 OECD AI Policy", url: "https://www.oecd.org/digital/artificial-intelligence/" }
+                ]
+            },
+            9: {
+                title: "Open Library Data Dumps",
+                pov: "POV: Data Science Specialist in Cultural Heritage",
+                description: `<p>Open Library, part of the Internet Archive, provides comprehensive data dumps of their bibliographic database containing millions of book records, author information, and reading statistics. These datasets represent one of the largest openly available bibliographic collections for computational analysis and AI training.</p>
+                <p>The data dumps include works, editions, authors, and subjects in structured formats suitable for machine learning applications. This enables researchers and developers to build AI systems for book recommendation, bibliographic analysis, and cultural heritage applications using real-world library data at scale.</p>`,
+                links: [
+                    { text: "📄 Data Dumps", url: "https://openlibrary.org/developers/dumps" },
+                    { text: "📚 Internet Archive", url: "https://archive.org/" }
+                ]
+            },
+            10: {
+                title: "HTR Outputs from Transkribus",
+                pov: "POV: Medieval Manuscripts Archivist",
+                description: `<p>Handwritten Text Recognition (HTR) is an AI service that converts handwritten documents into searchable digital text. Transkribus is a popular platform providing this service, particularly valuable for historical documents and manuscripts in various languages and scripts.</p>
+                <p>The process involves uploading scanned images of handwritten documents, where AI models analyse the handwriting and convert it to typed text. This transforms previously unsearchable historical documents into fully searchable digital archives.</p>`,
+                links: [
+                    { text: "📜 Transkribus", url: "https://transkribus.eu/" },
+                    { text: "🎥 Tutorial", url: "https://www.youtube.com/watch?v=7HZhOWPRJjE" }
+                ]
+            },
+            11: {
+                title: "IIIF Tsukushi Viewer",
+                pov: "POV: Systems Librarian",
+                description: `<p>The IIIF Tsukushi Viewer, developed by the Center for Open Data in the Humanities in Japan, leverages IIIF standards to connect multimodal AI models with classical Japanese texts. This innovative viewer allows users to interact with historical documents using modern language interfaces.</p>
+                <p>Users can select specific pages or regions, ask questions in modern Japanese about classical content, and receive contextual responses that bridge the gap between historical documents and contemporary understanding. This demonstrates how AI can make cultural heritage more accessible while preserving scholarly rigor.</p>`,
+                links: [
+                    { text: "🔗 Project Page", url: "https://codh.rois.ac.jp/software/iiif-tsukushi-viewer/" },
+                    { text: "🎥 Live Viewer", url: "https://codh.rois.ac.jp/tsukushi/iiif-tsukushi-viewer/" }
+                ]
+            },
+            12: {
+                title: "eluxemburgensia Chatbot",
+                pov: "POV: Historian",
+                description: `<p>The eluxemburgensia chatbot allows users to explore Luxembourg's digitised newspaper collections through natural language queries. Powered by ChatGPT, this AI-powered interface makes historical newspaper content accessible through conversational search in French, German, and English.</p>
+                <p>Users can ask questions about historical topics, events, or themes covered in Luxembourgish newspapers, making decades of historical content discoverable through modern conversational interfaces. The system acknowledges its learning limitations, encouraging critical evaluation of responses while democratizing access to cultural heritage.</p>`,
+                links: [
+                    { text: "💬 Chat Interface", url: "https://chat.eluxemburgensia.lu/" },
+                    { text: "📚 eluxemburgensia", url: "https://www.eluxemburgensia.lu/" }
+                ]
+            }
+        };
+
+        // Drag and drop event handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardItems = document.querySelectorAll('.card-item');
+            const vennContainer = document.getElementById('venn-container');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const modal = document.getElementById('cardModal');
+            const closeBtn = document.querySelector('.close');
+
+            cardItems.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                card.addEventListener('click', handleCardClick);
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('drop', handleDrop);
+                zone.addEventListener('dragenter', handleDragEnter);
+                zone.addEventListener('dragleave', handleDragLeave);
+            });
+
+            vennContainer.addEventListener('dragover', handleDragOver);
+            vennContainer.addEventListener('drop', handleDropOnDiagram);
+
+            // Modal event handlers
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+        }
+
+        function handleCardClick(e) {
+            // Don't open modal if we're in the middle of a drag operation
+            if (this.classList.contains('dragging')) {
+                return;
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const cardId = parseInt(this.dataset.card);
+            openModal(cardId);
+        }
+
+        function openModal(cardId) {
+            const cardData = cardDetails[cardId];
+            if (!cardData) return;
+
+            document.getElementById('modalTitle').textContent = cardData.title;
+            document.getElementById('modalPOV').textContent = cardData.pov;
+            document.getElementById('modalDescription').innerHTML = cardData.description;
+            
+            const linksContainer = document.getElementById('modalLinks');
+            linksContainer.innerHTML = '';
+            
+            cardData.links.forEach(link => {
+                const linkElement = document.createElement('a');
+                linkElement.href = link.url;
+                linkElement.target = '_blank';
+                linkElement.className = 'modal-link';
+                linkElement.textContent = link.text;
+                linksContainer.appendChild(linkElement);
+            });
+
+            document.getElementById('cardModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            document.getElementById('cardModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedCard = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+        }
+
+        function handleDropOnDiagram(e) {
+            if (!draggedCard) return;
+            
+            e.preventDefault();
+            
+            const rect = document.getElementById('venn-container').getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const cardId = draggedCard.dataset.card;
+            const cardTitle = cardTitles[cardId];
+            
+            // Remove card from original location
+            draggedCard.style.display = 'none';
+            
+            // Create placed card
+            createPlacedCard(cardId, cardTitle, x, y);
+        }
+
+        function createPlacedCard(cardId, title, x, y) {
+            // Remove existing placed card if it exists
+            const existingCard = document.querySelector(`[data-placed-card="${cardId}"]`);
+            if (existingCard) {
+                existingCard.remove();
+            }
+            
+            const placedCard = document.createElement('div');
+            placedCard.className = 'placed-card';
+            placedCard.dataset.placedCard = cardId;
+            placedCard.innerHTML = `<div style="font-size: 0.6em; font-weight: 700;">${cardId}</div><div>${title}</div>`;
+            placedCard.style.left = (x - 40) + 'px';
+            placedCard.style.top = (y - 20) + 'px';
+            
+            // Make it draggable within the diagram
+            placedCard.draggable = true;
+            placedCard.addEventListener('dragstart', function(e) {
+                draggedCard = this;
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            
+            // Click to view details
+            placedCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openModal(parseInt(cardId));
+            });
+            
+            // Double-click to return to panel
+            placedCard.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                returnCardToPanel(cardId);
+            });
+            
+            document.getElementById('venn-container').appendChild(placedCard);
+            placedCards.set(cardId, {x, y, title});
+        }
+
+        function returnCardToPanel(cardId) {
+            // Remove placed card
+            const placedCard = document.querySelector(`[data-placed-card="${cardId}"]`);
+            if (placedCard) {
+                placedCard.remove();
+            }
+            
+            // Show original card
+            const originalCard = document.querySelector(`[data-card="${cardId}"]`);
+            if (originalCard) {
+                originalCard.style.display = 'block';
+            }
+            
+            placedCards.delete(cardId);
+        }
+
+        function resetCards() {
+            // Remove all placed cards
+            const placedCardElements = document.querySelectorAll('.placed-card');
+            placedCardElements.forEach(card => card.remove());
+            
+            // Show all original cards
+            const originalCards = document.querySelectorAll('.card-item');
+            originalCards.forEach(card => card.style.display = 'block');
+            
+            // Clear the placedCards Map
+            placedCards.clear();
+        }
+
+        function showSolution() {
+            document.getElementById('solution-legend').style.display = 'block';
+        }
+
+        function hideSolution() {
+            document.getElementById('solution-legend').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
