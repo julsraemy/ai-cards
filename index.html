@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Information Science and information specialists working with AI, designing with AI and developing for AI - Interactive Venn Diagram Exercise</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-   <style>
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -16,6 +16,14 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 1rem;
+            touch-action: manipulation; /* Improve touch responsiveness */
+            overscroll-behavior: contain; /* Prevent overscroll on mobile */
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem; /* Less padding on mobile for more space */
+            }
         }
 
         .header {
@@ -83,6 +91,8 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             position: relative;
+            touch-action: none; /* Prevent default touch behaviors */
+            user-select: none; /* Prevent text selection during drag */
         }
 
         .card-item:hover {
@@ -131,7 +141,7 @@
 
         .venn-container {
             position: relative;
-            height: 600px;
+            height: 700px; /* Bigger on desktop too */
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             overflow: hidden;
@@ -143,14 +153,39 @@
         }
 
         .drop-zone {
-            fill-opacity: 0.3;
-            stroke-width: 3;
+            fill-opacity: 0.2;
+            stroke-width: 4;
             transition: all 0.3s ease;
         }
 
         .drop-zone.drag-over {
-            fill-opacity: 0.6;
-            stroke-width: 5;
+            fill-opacity: 0.7;
+            stroke-width: 6;
+        }
+
+        /* Highlight all drop zones when dragging */
+        body.dragging .drop-zone {
+            fill-opacity: 0.4;
+            stroke-width: 6;
+            animation: pulse-zone 1.5s infinite;
+        }
+
+        body.dragging .drop-zone.drag-over {
+            fill-opacity: 0.8;
+            stroke-width: 8;
+            animation: pulse-zone-active 1s infinite;
+        }
+
+        @keyframes pulse-zone {
+            0% { stroke-width: 6; fill-opacity: 0.4; }
+            50% { stroke-width: 8; fill-opacity: 0.6; }
+            100% { stroke-width: 6; fill-opacity: 0.4; }
+        }
+
+        @keyframes pulse-zone-active {
+            0% { stroke-width: 8; fill-opacity: 0.8; }
+            50% { stroke-width: 10; fill-opacity: 0.95; }
+            100% { stroke-width: 8; fill-opacity: 0.8; }
         }
 
         .working-zone { fill: #ff4444; stroke: #cc0000; }
@@ -164,6 +199,21 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             text-anchor: middle;
             pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Make labels more visible during dragging */
+        body.dragging .zone-label {
+            font-size: 18px;
+            font-weight: 800;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.9);
+            animation: glow-text 2s infinite;
+        }
+
+        @keyframes glow-text {
+            0% { text-shadow: 3px 3px 8px rgba(0,0,0,0.9); }
+            50% { text-shadow: 3px 3px 12px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5); }
+            100% { text-shadow: 3px 3px 8px rgba(0,0,0,0.9); }
         }
 
         .placed-card {
@@ -178,6 +228,8 @@
             cursor: grab;
             min-width: 80px;
             z-index: 10;
+            touch-action: none;
+            user-select: none;
         }
 
         .placed-card:hover {
@@ -368,10 +420,14 @@
             
             .cards-panel {
                 order: 2;
+                max-height: 25vh; /* Much smaller to give more room for diagram */
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             
             .venn-container {
-                height: 700px; /* Increased from 500px */
+                height: 80vh; /* Much bigger - 80% of viewport height */
+                margin-bottom: 1rem;
             }
             
             .header h1 {
@@ -379,29 +435,36 @@
             }
 
             .zone-label {
-                font-size: 18px; /* Larger labels for easier reading */
+                font-size: 20px; /* Even larger labels */
+                font-weight: 800;
+                text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
             }
             
             .placed-card {
-                font-size: 0.8rem; /* Larger text on mobile */
-                padding: 0.6rem;
-                min-width: 90px;
+                font-size: 0.9rem; /* Larger text on mobile */
+                padding: 0.8rem;
+                min-width: 100px;
             }
         }
 
         @media (max-width: 768px) {
             .venn-container {
-                height: 600px; /* Increased from 400px */
+                height: 75vh; /* Still very large on phones */
+            }
+            
+            .cards-panel {
+                max-height: 20vh; /* Even smaller panel */
             }
             
             .zone-label {
-                font-size: 16px;
+                font-size: 18px;
+                font-weight: 800;
             }
             
             .placed-card {
-                font-size: 0.7rem;
-                padding: 0.5rem;
-                min-width: 80px;
+                font-size: 0.8rem;
+                padding: 0.6rem;
+                min-width: 90px;
             }
         }
 
@@ -513,18 +576,18 @@
         <div class="venn-container" id="venn-container">
             <svg class="venn-svg" viewBox="0 0 800 600">
                 <!-- Working with AI Circle -->
-                <circle cx="280" cy="200" r="160" class="drop-zone working-zone" data-zone="working"/>
+                <circle cx="240" cy="170" r="200" class="drop-zone working-zone" data-zone="working"/>
                 
                 <!-- Designing with AI Circle -->
-                <circle cx="520" cy="200" r="160" class="drop-zone designing-zone" data-zone="designing"/>
+                <circle cx="560" cy="170" r="200" class="drop-zone designing-zone" data-zone="designing"/>
                 
                 <!-- Developing for AI Circle -->
-                <circle cx="400" cy="370" r="160" class="drop-zone developing-zone" data-zone="developing"/>
+                <circle cx="400" cy="390" r="200" class="drop-zone developing-zone" data-zone="developing"/>
 
                 <!-- Zone Labels -->
-                <text x="180" y="120" class="zone-label">Working with AI</text>
-                <text x="620" y="120" class="zone-label">Designing with AI</text>
-                <text x="400" y="550" class="zone-label">Developing for AI</text>
+                <text x="130" y="90" class="zone-label">Working with AI</text>
+                <text x="670" y="90" class="zone-label">Designing with AI</text>
+                <text x="400" y="580" class="zone-label">Developing for AI</text>
             </svg>
         </div>
     </div>
@@ -621,13 +684,13 @@
     <script>
         let draggedCard = null;
         let placedCards = new Map();
-        let touchDragCard = null;
-        let touchClone = null;
-        let touchStartTime = 0;
+        let isDragging = false;
+        let dragClone = null;
+        let startTime = 0;
+        let startX = 0;
+        let startY = 0;
+        let currentCard = null;
         let lastTapTime = 0;
-        let pointerDragCard = null;
-        let pointerClone = null;
-        let pointerStartTime = 0;
 
         // Card titles for display
         const cardTitles = {
@@ -770,7 +833,7 @@
             }
         };
 
-         // Drag and drop event handlers
+      // Drag and drop event handlers
         document.addEventListener('DOMContentLoaded', function() {
             const cardItems = document.querySelectorAll('.card-item');
             const vennContainer = document.getElementById('venn-container');
@@ -784,23 +847,11 @@
                 card.addEventListener('dragend', handleDragEnd);
                 card.addEventListener('click', handleCardClick);
                 
-                // Touch events for mobile - with better browser compatibility
-                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                    card.addEventListener('touchstart', handleTouchStart, {passive: false});
-                    card.addEventListener('touchmove', handleTouchMove, {passive: false});
-                    card.addEventListener('touchend', handleTouchEnd, {passive: false});
-                    
-                    // Prevent context menu on long press
-                    card.addEventListener('contextmenu', function(e) {
-                        e.preventDefault();
-                    });
-                }
-                
-                // Fallback for browsers with poor touch support
+                // Universal touch/pointer handling for better compatibility
+                card.addEventListener('mousedown', handleUniversalStart);
+                card.addEventListener('touchstart', handleUniversalStart, {passive: false});
                 if (window.PointerEvent) {
-                    card.addEventListener('pointerdown', handlePointerDown);
-                    card.addEventListener('pointermove', handlePointerMove);
-                    card.addEventListener('pointerup', handlePointerUp);
+                    card.addEventListener('pointerdown', handleUniversalStart);
                 }
             });
 
@@ -837,8 +888,8 @@
         }
 
         function handleCardClick(e) {
-            // Don't open modal if we're in the middle of a drag operation
-            if (this.classList.contains('dragging')) {
+            // Only handle click if not in middle of drag operation
+            if (isDragging || this.classList.contains('dragging')) {
                 return;
             }
             
@@ -878,184 +929,191 @@
             document.body.style.overflow = 'auto'; // Restore scrolling
         }
 
-        // Touch event handlers for mobile support
-        function handleTouchStart(e) {
-            // Prevent conflicts with pointer events
-            if (e.pointerType) return;
-            
-            touchStartTime = Date.now();
-            touchDragCard = this;
-            
-            const touch = e.touches[0];
-            // Store initial touch position
-            touch.startX = touch.clientX;
-            touch.startY = touch.clientY;
-            touch.moved = false;
-            
-            // Add a small delay to distinguish between tap and drag
-            setTimeout(() => {
-                if (touchDragCard && !touch.moved) {
-                    // Still haven't moved, might be a tap
-                    touchDragCard.style.transform = 'scale(0.95)';
-                }
-            }, 100);
-        }
-
-        function handleTouchMove(e) {
-            if (!touchDragCard) return;
-            
-            const touch = e.touches[0];
-            const moveThreshold = 15; // Increased threshold for better Firefox compatibility
-            
-            // Check if touch has moved enough to be considered a drag
-            if (!touch.moved) {
-                const deltaX = Math.abs(touch.clientX - touch.startX);
-                const deltaY = Math.abs(touch.clientY - touch.startY);
-                
-                if (deltaX > moveThreshold || deltaY > moveThreshold) {
-                    touch.moved = true;
-                    
-                    // Prevent default to avoid scrolling
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Create visual clone for dragging
-                    createDragClone(touchDragCard, touch.clientX, touch.clientY, 'touch');
-                }
+        // Universal drag handling for all browsers and devices
+        function handleUniversalStart(e) {
+            // Don't interfere with existing drag operations or mouse events on desktop
+            if (e.type === 'mousedown' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+                return;
             }
             
-            if (touch.moved && touchClone) {
+            // Prevent default for touch events
+            if (e.type === 'touchstart' || e.type === 'pointerdown') {
+                e.preventDefault();
+            }
+            
+            startTime = Date.now();
+            currentCard = this;
+            isDragging = false;
+            
+            // Get coordinates based on event type
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || e.pageX;
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY) || e.pageY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            // Add move and end listeners to document for better tracking
+            document.addEventListener('mousemove', handleUniversalMove);
+            document.addEventListener('touchmove', handleUniversalMove, {passive: false});
+            document.addEventListener('pointermove', handleUniversalMove, {passive: false});
+            
+            document.addEventListener('mouseup', handleUniversalEnd);
+            document.addEventListener('touchend', handleUniversalEnd);
+            document.addEventListener('pointerup', handleUniversalEnd);
+            
+            // Prevent context menu
+            document.addEventListener('contextmenu', preventContext);
+            
+            // Visual feedback
+            this.style.transform = 'scale(0.95)';
+        }
+
+        function handleUniversalMove(e) {
+            if (!currentCard) return;
+            
+            // Get coordinates based on event type
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || e.pageX;
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY) || e.pageY;
+            
+            const deltaX = Math.abs(clientX - startX);
+            const deltaY = Math.abs(clientY - startY);
+            const moveThreshold = 20; // Increased for better reliability
+            
+            // Start dragging if moved enough
+            if (!isDragging && (deltaX > moveThreshold || deltaY > moveThreshold)) {
+                isDragging = true;
+                
+                // Prevent scrolling during drag
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+                
+                // Create drag clone
+                createUniversalDragClone(currentCard, clientX, clientY);
+                
+                // Prevent all default behaviors
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            // Update clone position if dragging
+            if (isDragging && dragClone) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                updateDragClone(touchClone, touch.clientX, touch.clientY);
+                const rect = dragClone.getBoundingClientRect();
+                dragClone.style.left = (clientX - rect.width / 2) + 'px';
+                dragClone.style.top = (clientY - rect.height / 2) + 'px';
+                
+                // Highlight drop zone under cursor
+                highlightDropZone(clientX, clientY);
             }
         }
 
-        function handleTouchEnd(e) {
-            if (!touchDragCard) return;
+        function handleUniversalEnd(e) {
+            if (!currentCard) return;
             
-            const touch = e.changedTouches[0];
-            const touchDuration = Date.now() - touchStartTime;
+            const duration = Date.now() - startTime;
             const currentTime = Date.now();
             
-            // Reset transform
-            touchDragCard.style.transform = '';
+            // Get coordinates based on event type
+            const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX) || e.pageX;
+            const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY) || e.pageY;
             
-            // If it was a quick tap and didn't move much, treat as click
-            if (touchDuration < 400 && !touch.moved) {
-                // Check for double-tap (placed cards only)
-                if (touchDragCard.dataset.placedCard && currentTime - lastTapTime < 600) {
-                    cleanupTouch();
-                    returnCardToPanel(touchDragCard.dataset.placedCard);
+            // Clean up event listeners
+            document.removeEventListener('mousemove', handleUniversalMove);
+            document.removeEventListener('touchmove', handleUniversalMove);
+            document.removeEventListener('pointermove', handleUniversalMove);
+            
+            document.removeEventListener('mouseup', handleUniversalEnd);
+            document.removeEventListener('touchend', handleUniversalEnd);
+            document.removeEventListener('pointerup', handleUniversalEnd);
+            
+            document.removeEventListener('contextmenu', preventContext);
+            
+            // Restore scrolling
+            document.body.style.overflow = 'auto';
+            document.body.style.position = 'static';
+            document.body.style.width = 'auto';
+            
+            // Reset visual feedback
+            currentCard.style.transform = '';
+            
+            // Handle tap vs drag
+            if (!isDragging && duration < 400) {
+                // Check for double-tap on placed cards
+                if (currentCard.dataset.placedCard && currentTime - lastTapTime < 600) {
+                    cleanupDrag();
+                    returnCardToPanel(currentCard.dataset.placedCard);
                     lastTapTime = 0;
                     return;
                 }
                 
                 lastTapTime = currentTime;
-                cleanupTouch();
+                cleanupDrag();
                 
-                const cardId = parseInt(touchDragCard.dataset.card || touchDragCard.dataset.placedCard);
+                // Open modal
+                const cardId = parseInt(currentCard.dataset.card || currentCard.dataset.placedCard);
                 openModal(cardId);
                 return;
             }
             
-            // If it was a drag, handle drop
-            if (touch.moved && touchClone) {
-                handleDrop(touch.clientX, touch.clientY, touchDragCard);
+            // Handle drop if was dragging
+            if (isDragging && dragClone) {
+                handleUniversalDrop(clientX, clientY);
             }
             
-            cleanupTouch();
+            cleanupDrag();
         }
 
-        // Pointer events for better Firefox compatibility
-        function handlePointerDown(e) {
-            if (e.pointerType === 'mouse') return; // Let mouse events handle this
-            
-            pointerStartTime = Date.now();
-            pointerDragCard = this;
-            
-            e.startX = e.clientX;
-            e.startY = e.clientY;
-            e.moved = false;
-            
-            this.setPointerCapture(e.pointerId);
-        }
-
-        function handlePointerMove(e) {
-            if (!pointerDragCard || e.pointerType === 'mouse') return;
-            
-            const moveThreshold = 15;
-            
-            if (!e.moved) {
-                const deltaX = Math.abs(e.clientX - e.startX);
-                const deltaY = Math.abs(e.clientY - e.startY);
-                
-                if (deltaX > moveThreshold || deltaY > moveThreshold) {
-                    e.moved = true;
-                    e.preventDefault();
-                    
-                    createDragClone(pointerDragCard, e.clientX, e.clientY, 'pointer');
-                }
-            }
-            
-            if (e.moved && pointerClone) {
-                e.preventDefault();
-                updateDragClone(pointerClone, e.clientX, e.clientY);
-            }
-        }
-
-        function handlePointerUp(e) {
-            if (!pointerDragCard || e.pointerType === 'mouse') return;
-            
-            const pointerDuration = Date.now() - pointerStartTime;
-            
-            if (pointerDuration < 400 && !e.moved) {
-                cleanupPointer();
-                const cardId = parseInt(pointerDragCard.dataset.card || pointerDragCard.dataset.placedCard);
-                openModal(cardId);
-                return;
-            }
-            
-            if (e.moved && pointerClone) {
-                handleDrop(e.clientX, e.clientY, pointerDragCard);
-            }
-            
-            cleanupPointer();
-        }
-
-        function createDragClone(sourceCard, clientX, clientY, type) {
+        function createUniversalDragClone(sourceCard, clientX, clientY) {
             const rect = sourceCard.getBoundingClientRect();
-            const clone = sourceCard.cloneNode(true);
+            dragClone = sourceCard.cloneNode(true);
             
-            clone.style.position = 'fixed';
-            clone.style.zIndex = '1000';
-            clone.style.width = rect.width + 'px';
-            clone.style.height = rect.height + 'px';
-            clone.style.pointerEvents = 'none';
-            clone.style.opacity = '0.8';
-            clone.style.transform = 'rotate(3deg) scale(1.05)';
-            clone.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
+            dragClone.style.position = 'fixed';
+            dragClone.style.zIndex = '2000';
+            dragClone.style.width = Math.max(rect.width, 100) + 'px'; // Minimum width for visibility
+            dragClone.style.height = Math.max(rect.height, 60) + 'px'; // Minimum height
+            dragClone.style.pointerEvents = 'none';
+            dragClone.style.opacity = '0.9';
+            dragClone.style.transform = 'rotate(3deg) scale(1.2)'; // Bigger on mobile
+            dragClone.style.boxShadow = '0 15px 35px rgba(0,0,0,0.5)';
+            dragClone.style.border = '3px solid #355cc9'; // Visible border
+            dragClone.style.left = (clientX - rect.width / 2) + 'px';
+            dragClone.style.top = (clientY - rect.height / 2) + 'px';
+            dragClone.style.borderRadius = '8px';
             
-            updateDragClone(clone, clientX, clientY);
+            // Add a visual indicator
+            const indicator = document.createElement('div');
+            indicator.style.position = 'absolute';
+            indicator.style.top = '-10px';
+            indicator.style.right = '-10px';
+            indicator.style.width = '20px';
+            indicator.style.height = '20px';
+            indicator.style.backgroundColor = '#355cc9';
+            indicator.style.borderRadius = '50%';
+            indicator.style.animation = 'pulse 1s infinite';
+            dragClone.appendChild(indicator);
             
-            document.body.appendChild(clone);
-            sourceCard.style.opacity = '0.5';
+            // Add pulse animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.2); opacity: 0.7; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
             
-            if (type === 'touch') {
-                touchClone = clone;
-            } else {
-                pointerClone = clone;
-            }
+            document.body.appendChild(dragClone);
+            sourceCard.style.opacity = '0.3';
+            
+            // Add body class for drag state
+            document.body.classList.add('dragging');
         }
 
-        function updateDragClone(clone, clientX, clientY) {
-            const rect = clone.getBoundingClientRect();
-            clone.style.left = (clientX - rect.width / 2) + 'px';
-            clone.style.top = (clientY - rect.height / 2) + 'px';
-        }
-
-        function handleDrop(clientX, clientY, dragCard) {
+        function handleUniversalDrop(clientX, clientY) {
             const elementBelow = document.elementFromPoint(clientX, clientY);
             
             // Check if dropped on Venn diagram
@@ -1067,11 +1125,11 @@
                 
                 // Get card ID
                 let cardId;
-                if (dragCard.dataset.placedCard) {
-                    cardId = dragCard.dataset.placedCard;
+                if (currentCard.dataset.placedCard) {
+                    cardId = currentCard.dataset.placedCard;
                 } else {
-                    cardId = dragCard.dataset.card;
-                    dragCard.style.display = 'none';
+                    cardId = currentCard.dataset.card;
+                    currentCard.style.display = 'none';
                 }
                 
                 const cardTitle = cardTitles[cardId];
@@ -1079,33 +1137,124 @@
             }
         }
 
-        function cleanupTouch() {
-            if (touchClone) {
-                touchClone.remove();
-                touchClone = null;
-            }
-            
-            if (touchDragCard) {
-                touchDragCard.style.opacity = '1';
-                touchDragCard.style.transform = '';
-                touchDragCard = null;
-            }
-            
-            touchStartTime = 0;
+        function preventContext(e) {
+            e.preventDefault();
         }
 
-        function cleanupPointer() {
-            if (pointerClone) {
-                pointerClone.remove();
-                pointerClone = null;
+        function cleanupDrag() {
+            if (dragClone) {
+                // Clear zone indicator
+                const indicator = dragClone.querySelector('.zone-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+                dragClone.remove();
+                dragClone = null;
             }
             
-            if (pointerDragCard) {
-                pointerDragCard.style.opacity = '1';
-                pointerDragCard = null;
+            if (currentCard) {
+                currentCard.style.opacity = '1';
+                currentCard.style.transform = '';
+                currentCard = null;
             }
             
-            pointerStartTime = 0;
+            // Remove body class
+            document.body.classList.remove('dragging');
+            
+            // Clear drop zone highlights
+            clearDropZoneHighlights();
+            
+            isDragging = false;
+            startTime = 0;
+        }
+
+        function highlightDropZone(clientX, clientY) {
+            // Clear previous highlights
+            clearDropZoneHighlights();
+            
+            // Check which drop zone we're over
+            const elementBelow = document.elementFromPoint(clientX, clientY);
+            const vennContainer = document.getElementById('venn-container');
+            
+            let currentZone = null;
+            
+            if (vennContainer && (vennContainer.contains(elementBelow) || elementBelow === vennContainer)) {
+                // Get SVG coordinates
+                const rect = vennContainer.getBoundingClientRect();
+                const svgX = (clientX - rect.left) / rect.width * 800; // Scale to SVG viewBox
+                const svgY = (clientY - rect.top) / rect.height * 600;
+                
+                // Check which circle we're in (updated coordinates for bigger circles)
+                const circles = [
+                    { cx: 240, cy: 170, r: 200, zone: 'working', name: 'Working with AI' },
+                    { cx: 560, cy: 170, r: 200, zone: 'designing', name: 'Designing with AI' },
+                    { cx: 400, cy: 390, r: 200, zone: 'developing', name: 'Developing for AI' }
+                ];
+                
+                circles.forEach(circle => {
+                    const distance = Math.sqrt(Math.pow(svgX - circle.cx, 2) + Math.pow(svgY - circle.cy, 2));
+                    if (distance <= circle.r) {
+                        const dropZone = document.querySelector(`[data-zone="${circle.zone}"]`);
+                        if (dropZone) {
+                            dropZone.classList.add('drag-over');
+                            currentZone = circle.name;
+                        }
+                    }
+                });
+            }
+            
+            // Update drag clone to show current zone
+            updateDragCloneZone(currentZone);
+        }
+
+        function updateDragCloneZone(zoneName) {
+            if (!dragClone) return;
+            
+            // Remove existing zone indicator
+            const existingIndicator = dragClone.querySelector('.zone-indicator');
+            if (existingIndicator) {
+                existingIndicator.remove();
+            }
+            
+            // Add new zone indicator if over a zone
+            if (zoneName) {
+                const indicator = document.createElement('div');
+                indicator.className = 'zone-indicator';
+                indicator.textContent = zoneName;
+                indicator.style.position = 'absolute';
+                indicator.style.bottom = '-35px';
+                indicator.style.left = '50%';
+                indicator.style.transform = 'translateX(-50%)';
+                indicator.style.background = '#355cc9';
+                indicator.style.color = 'white';
+                indicator.style.padding = '0.3rem 0.8rem';
+                indicator.style.borderRadius = '20px';
+                indicator.style.fontSize = '0.7rem';
+                indicator.style.fontWeight = '700';
+                indicator.style.whiteSpace = 'nowrap';
+                indicator.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                indicator.style.animation = 'bounce 0.5s ease';
+                
+                dragClone.appendChild(indicator);
+                
+                // Add bounce animation if not already present
+                if (!document.querySelector('#bounce-style')) {
+                    const bounceStyle = document.createElement('style');
+                    bounceStyle.id = 'bounce-style';
+                    bounceStyle.textContent = `
+                        @keyframes bounce {
+                            0% { transform: translateX(-50%) translateY(10px); opacity: 0; }
+                            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(bounceStyle);
+                }
+            }
+        }
+
+        function clearDropZoneHighlights() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => zone.classList.remove('drag-over'));
         }
 
         function handleDragEnd(e) {
@@ -1180,29 +1329,20 @@
                 e.dataTransfer.effectAllowed = 'move';
             });
             
-            // Touch events for mobile
-            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-                placedCard.addEventListener('touchstart', handleTouchStart, {passive: false});
-                placedCard.addEventListener('touchmove', handleTouchMove, {passive: false});
-                placedCard.addEventListener('touchend', handleTouchEnd, {passive: false});
-                
-                placedCard.addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                });
-            }
-            
-            // Fallback for browsers with poor touch support
+            // Universal drag handling
+            placedCard.addEventListener('mousedown', handleUniversalStart);
+            placedCard.addEventListener('touchstart', handleUniversalStart, {passive: false});
             if (window.PointerEvent) {
-                placedCard.addEventListener('pointerdown', handlePointerDown);
-                placedCard.addEventListener('pointermove', handlePointerMove);
-                placedCard.addEventListener('pointerup', handlePointerUp);
+                placedCard.addEventListener('pointerdown', handleUniversalStart);
             }
             
             // Click to view details
             placedCard.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                openModal(parseInt(cardId));
+                if (!isDragging) { // Only if not dragging
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openModal(parseInt(cardId));
+                }
             });
             
             // Double-click to return to panel
@@ -1233,13 +1373,25 @@
         }
 
         function resetCards() {
+            // Clean up any ongoing drag operations
+            cleanupDrag();
+            
             // Remove all placed cards
             const placedCardElements = document.querySelectorAll('.placed-card');
             placedCardElements.forEach(card => card.remove());
             
             // Show all original cards
             const originalCards = document.querySelectorAll('.card-item');
-            originalCards.forEach(card => card.style.display = 'block');
+            originalCards.forEach(card => {
+                card.style.display = 'block';
+                card.style.opacity = '1';
+                card.style.transform = '';
+            });
+            
+            // Restore body scrolling
+            document.body.style.overflow = 'auto';
+            document.body.style.position = 'static';
+            document.body.style.width = 'auto';
             
             // Clear the placedCards Map
             placedCards.clear();
