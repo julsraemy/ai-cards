@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI in Information Science - Interactive Venn Diagram Exercise</title>
+    <title>Information Science and information specialists working with AI, designing with AI and developing for AI - Interactive Venn Diagram Exercise</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -398,14 +398,15 @@
 </head>
 <body>
     <div class="header">
-        <h1>AI in Information Science - Interactive Exercise</h1>
+        <h1>Information Science and information specialists working with AI, designing with AI and developing for AI</h1>
+        <h2>Interactive Venn Diagram Exercise</h2>
         <div class="subtitle">Drag cards to the appropriate regions</div>
     </div>
 
     <div class="instructions">
         <strong>Instructions:</strong> 
         • <strong>Click</strong> any card to view detailed descriptions and links
-        • <strong>Drag</strong> cards from the left panel and drop them onto the Venn diagram regions
+        • <strong>Drag</strong> cards from the left panel or the panel below (if you are using a smaller screen) and drop them onto the Venn diagram regions
         • <strong>Double-click</strong> placed cards to return them to the panel
         • Consider each card's Point of View (POV) to determine the appropriate category
     </div>
@@ -422,14 +423,14 @@
                 </div>
                 <div class="card-item" data-card="2" draggable="true">
                     <div class="card-number">02</div>
-                    <div class="card-title">GenAI Usage Guidelines</div>
+                    <div class="card-title">Citation and Best Practices Guidelines</div>
                     <div class="card-pov">University Librarian</div>
                     <div class="click-hint">Click for details</div>
                 </div>
                 <div class="card-item" data-card="3" draggable="true">
                     <div class="card-number">03</div>
                     <div class="card-title">RAG Chatbot</div>
-                    <div class="card-pov">Digital Archivist</div>
+                    <div class="card-pov">Data Scientist</div>
                     <div class="click-hint">Click for details</div>
                 </div>
                 <div class="card-item" data-card="4" draggable="true">
@@ -458,14 +459,14 @@
                 </div>
                 <div class="card-item" data-card="8" draggable="true">
                     <div class="card-number">08</div>
-                    <div class="card-title">AI vs Open Data Risks</div>
-                    <div class="card-pov">Data Governance Specialist</div>
+                    <div class="card-title">AI Bots vs Open Data</div>
+                    <div class="card-pov">Data Steward</div>
                     <div class="click-hint">Click for details</div>
                 </div>
                 <div class="card-item" data-card="9" draggable="true">
                     <div class="card-number">09</div>
                     <div class="card-title">Open Library Data Dumps</div>
-                    <div class="card-pov">Data Science Specialist</div>
+                    <div class="card-pov">Data Curator</div>
                     <div class="click-hint">Click for details</div>
                 </div>
                 <div class="card-item" data-card="10" draggable="true">
@@ -549,7 +550,7 @@
             </div>
             <div class="legend-items">
                 07 - VSA-AAS White Paper on ML (policy framework development)<br>
-                08 - AI vs Open Data Risks (risk assessment and governance)
+                08 - AI Bots vs Open Data Risks (risk assessment and governance)
             </div>
         </div>
 
@@ -571,7 +572,7 @@
                 Working + Designing (2 cards):
             </div>
             <div class="legend-items">
-                02 - GenAI Citation Guidelines (policy creation + implementation)<br>
+                02 - Citation and Best Practices Guidelines (policy creation + implementation)<br>
                 11 - IIIF Tsukushi Viewer (system implementation + user interface design)
             </div>
         </div>
@@ -604,13 +605,13 @@
         // Card titles for display
         const cardTitles = {
             1: "Annif",
-            2: "GenAI Guidelines",
+            2: "Citation and Best Practices Guidelines",
             3: "RAG Chatbot",
             4: "MCP + IIIF",
             5: "Image Similarity",
             6: "E-Periodica NLA",
             7: "VSA-AAS Paper",
-            8: "AI vs Open Data",
+            8: "AI Bots vs Open Data",
             9: "Open Library",
             10: "HTR Transkribus",
             11: "Tsukushi Viewer",
@@ -621,8 +622,8 @@
         const cardDetails = {
             1: {
                 title: "Annif",
-                pov: "POV: Subject Cataloger at National Library",
-                description: `<p>Annif is an automated subject indexing tool that uses machine learning to suggest appropriate subject headings and classifications for library materials. Instead of librarians manually reading through every document, Annif can analyse texts and suggest relevant Library of Congress Subject Headings.</p>
+                pov: "POV: Subject Cataloger",
+                description: `<p>Annif is an automated tool for indexing subjects that uses machine learning to suggest appropriate subject headings and classifications for library materials. Rather than librarians having to read through every document manually, Annif can analyse texts and suggest relevant classifications.</p>
                 <p>This speeds up the cataloguing process significantly whilst maintaining quality, as human catalogers still review and validate the AI's suggestions before they're finalised.</p>`,
                 links: [
                     { text: "🔗 Official Site", url: "https://annif.org/" },
@@ -630,23 +631,25 @@
                 ]
             },
             2: {
-                title: "GenAI Citation Guidelines",
+                title: "Citation and Best Practices Guidelines",
                 pov: "POV: University Librarian",
                 description: `<p>University libraries like the University of Geneva are creating practical guides to help students properly reference and cite generative AI tools such as ChatGPT, Claude, or Gemini in their academic work. These guidelines are essential for maintaining academic integrity whilst embracing new technologies.</p>
-                <p>The guides cover citation formats for different AI tools, requirements for disclosing AI use in assignments, and how to fact-check AI-generated content whilst properly attributing AI assistance in academic work.</p>`,
+                <p>These guide cover citation formats for different AI tools, requirements for disclosing AI use in assignments, and how to fact-check AI-generated content whilst properly attributing AI assistance in academic work.</p>`,
                 links: [
-                    { text: "📚 UNIGE Guide", url: "https://www.unige.ch/biblio/en/news/archive/2024/guide-iag/" },
-                    { text: "🏛️ Harvard Guide", url: "https://guides.library.harvard.edu/artificial-intelligence" }
+                    { text: "🏛️ Referencing the use of GenAI (University of Geneva)", url: "https://www.unige.ch/biblio/en/news/archive/2024/guide-iag/" },
+                    { text: "🏛️ Guide de l'Infothèque de la Haute école de travail social", url: "https://www.hesge.ch/hets/sites/hets/files/2024-11/Guide_referencement_IA_HETS-Geneve_2024.pdf" },
+                    { text: "🏛️ Artificial Intelligence for Research and Scholarship (Harvard Library)", url: "https://guides.library.harvard.edu/airesearch" }
                 ]
             },
             3: {
-                title: "Feeding a RAG Chatbot",
-                pov: "POV: Digital Archivist",
-                description: `<p>Retrieval-Augmented Generation (RAG) is a system that combines an institution's specific knowledge with large language models to provide accurate, contextual answers about collections and institutional history. The Swiss Federal Archives has developed such a system to help researchers navigate their vast collections.</p>
-                <p>The process involves curating authoritative finding aids, creating knowledge graphs showing relationships between archives, and deploying a conversational interface. This allows researchers to ask natural language questions and receive accurate, source-backed answers.</p>`,
+                title: "RAG Chatbot for LINDAS (Swiss Federal Archives)",
+                pov: "POV: Data Scientist",
+                description: `<p>Retrieval-Augmented Generation (RAG) is a system that combines an institution's specific knowledge with large language models to provide accurate, contextualised responses regarding its collections and history. The Swiss Federal Archives has developed a RAG Chatbot with the Fachhochschule Graubünden to help researchers navigate the Linked Data Services (LINDAS) system, where knowledge graphs of the Federal Administration can be stored and queried.</p>
+                <p>This allows end users to ask natural language questions and receive accurate, source-backed answers.</p>`,
                 links: [
-                    { text: "💻 Swiss Fed Archives", url: "https://github.com/SwissFederalArchives/sfa-chat-graph" },
-                    { text: "📊 LangChain RAG", url: "https://python.langchain.com/docs/tutorials/rag/" }
+                    { text: "💻 GitHub Repository", url: "https://github.com/SwissFederalArchives/sfa-chat-graph" },
+                    { text: "🔗 Chatbot UI Prototype", url: "https://sfa-chat-graph.aeol.in/" },
+                    { text: "🔗 LINDAS", url: "https://lindas.admin.ch/" }
                 ]
             },
             4: {
@@ -656,17 +659,17 @@
                 <p>The implementation includes parsing IIIF manifests, developing MCP servers for AI communication, integrating AI models for visual analysis, and creating metadata enrichment workflows. Projects like Yale's mcp-iiif-images demonstrate this integration.</p>`,
                 links: [
                     { text: "💻 Yale MCP-IIIF", url: "https://github.com/mikeapp/mcp-iiif-images" },
-                    { text: "🤗 Riksarkivet Demo", url: "https://huggingface.co/spaces/Riksarkivet/iiif_mcp_docs" }
+                    { text: "🤗 National Archives of Sweden MCP-IIIF on Hugging Face", url: "https://huggingface.co/spaces/Riksarkivet/iiif_mcp_docs" }
                 ]
             },
             5: {
                 title: "Image Similarity in Archives",
                 pov: "POV: Archivist",
                 description: `<p>Archipanion is an AI-powered search system based on vitrivr technology that allows users to search for visually similar images in large photographic archives. The City of Bern Archives uses this system to help researchers explore their historical photograph collection using visual similarity rather than traditional text-based searching.</p>
-                <p>Users can upload an image or select one from the collection, and the system finds photographs with similar visual characteristics. This helps discover unexpected connections, identify duplicates, and enables exploratory browsing that traditional keyword searching might miss.</p>`,
+                <p>Users can search either a scene with similar visual characteristics or text displayed in the media to find photographs. This helps to discover unexpected connections and identify duplicates, as well as enabling exploratory browsing that traditional keyword searching might miss.</p>`,
                 links: [
-                    { text: "📷 Bern Archives", url: "https://stadtbern.archipanion.com/" },
-                    { text: "📊 vitrivr Research", url: "https://vitrivr.org/" }
+                    { text: "📷 Archipanion for the Bern Archives", url: "https://stadtbern.archipanion.com/" },
+                    { text: "📊 vitrivr (University of Basel)", url: "https://vitrivr.org/" }
                 ]
             },
             6: {
@@ -690,18 +693,18 @@
                 ]
             },
             8: {
-                title: "AI Chatbots vs Open Data Platforms",
-                pov: "POV: Data Governance Specialist",
-                description: `<p>There are growing concerns about what happens when AI chatbots potentially replace direct access to open data platforms and databases. Whilst chatbots can make information more accessible, they also introduce risks of information gatekeeping and reduced transparency in how information is retrieved.</p>
-                <p>Key risks include "black box" responses where users cannot see the reasoning behind answers, reduced critical thinking as people accept AI responses without verification, and dependency on AI intermediaries rather than learning to navigate original sources.</p>`,
+                title: "AI Bots vs Open Data Platforms",
+                pov: "POV: Data Steward",
+                description: `<p>There are growing concerns about the impact of AI systems on open data platforms and digital collections. While AI can make information more accessible through chatbot interfaces, it also introduces significant infrastructure and sustainability challenges alongside traditional concerns about information gatekeeping and reduced transparency.</p>
+                <p>Key issues include the dramatic increase in automated bot traffic seeking training data, which has overwhelmed many cultural heritage institutions and open access platforms.</p>`,
                 links: [
-                    { text: "📊 Research Study", url: "https://www.nature.com/articles/d41586-023-00288-7" },
-                    { text: "🌐 OECD AI Policy", url: "https://www.oecd.org/digital/artificial-intelligence/" }
+                    { text: "📊 glam-e lab report on AI bots", url: "https://www.glamelab.org/products/are-ai-bots-knocking-cultural-heritage-offline/" },
+                    { text: "🌐 Wikimedia post on crawlers", url: "https://diff.wikimedia.org/2025/04/01/how-crawlers-impact-the-operations-of-the-wikimedia-projects/" }
                 ]
             },
             9: {
                 title: "Open Library Data Dumps",
-                pov: "POV: Data Science Specialist in Cultural Heritage",
+                pov: "POV: Data Curator in Cultural Heritage",
                 description: `<p>Open Library, part of the Internet Archive, provides comprehensive data dumps of their bibliographic database containing millions of book records, author information, and reading statistics. These datasets represent one of the largest openly available bibliographic collections for computational analysis and AI training.</p>
                 <p>The data dumps include works, editions, authors, and subjects in structured formats suitable for machine learning applications. This enables researchers and developers to build AI systems for book recommendation, bibliographic analysis, and cultural heritage applications using real-world library data at scale.</p>`,
                 links: [
@@ -715,8 +718,7 @@
                 description: `<p>Handwritten Text Recognition (HTR) is an AI service that converts handwritten documents into searchable digital text. Transkribus is a popular platform providing this service, particularly valuable for historical documents and manuscripts in various languages and scripts.</p>
                 <p>The process involves uploading scanned images of handwritten documents, where AI models analyse the handwriting and convert it to typed text. This transforms previously unsearchable historical documents into fully searchable digital archives.</p>`,
                 links: [
-                    { text: "📜 Transkribus", url: "https://transkribus.eu/" },
-                    { text: "🎥 Tutorial", url: "https://www.youtube.com/watch?v=7HZhOWPRJjE" }
+                    { text: "📜 Transkribus", url: "https://www.transkribus.org/" }
                 ]
             },
             11: {
@@ -725,8 +727,8 @@
                 description: `<p>The IIIF Tsukushi Viewer, developed by the Center for Open Data in the Humanities in Japan, leverages IIIF standards to connect multimodal AI models with classical Japanese texts. This innovative viewer allows users to interact with historical documents using modern language interfaces.</p>
                 <p>Users can select specific pages or regions, ask questions in modern Japanese about classical content, and receive contextual responses that bridge the gap between historical documents and contemporary understanding. This demonstrates how AI can make cultural heritage more accessible while preserving scholarly rigor.</p>`,
                 links: [
-                    { text: "🔗 Project Page", url: "https://codh.rois.ac.jp/software/iiif-tsukushi-viewer/" },
-                    { text: "🎥 Live Viewer", url: "https://codh.rois.ac.jp/tsukushi/iiif-tsukushi-viewer/" }
+                    { text: "🔗 Project Page (Japanese)", url: "https://codh.rois.ac.jp/software/iiif-tsukushi-viewer/" },
+                    { text: "🎥 Viewer", url: "https://codh.rois.ac.jp/tsukushi/iiif-tsukushi-viewer/" }
                 ]
             },
             12: {
@@ -736,7 +738,7 @@
                 <p>Users can ask questions about historical topics, events, or themes covered in Luxembourgish newspapers, making decades of historical content discoverable through modern conversational interfaces. The system acknowledges its learning limitations, encouraging critical evaluation of responses while democratizing access to cultural heritage.</p>`,
                 links: [
                     { text: "💬 Chat Interface", url: "https://chat.eluxemburgensia.lu/" },
-                    { text: "📚 eluxemburgensia", url: "https://www.eluxemburgensia.lu/" }
+                    { text: "📚 eluxemburgensia", url: "https://eluxemburgensia.lu/" }
                 ]
             }
         };
@@ -862,11 +864,19 @@
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            const cardId = draggedCard.dataset.card;
-            const cardTitle = cardTitles[cardId];
+            // Check if the dragged element is a placed card or original card
+            let cardId;
+            if (draggedCard.dataset.placedCard) {
+                // It's a placed card being moved
+                cardId = draggedCard.dataset.placedCard;
+            } else {
+                // It's an original card from the panel
+                cardId = draggedCard.dataset.card;
+                // Hide the original card
+                draggedCard.style.display = 'none';
+            }
             
-            // Remove card from original location
-            draggedCard.style.display = 'none';
+            const cardTitle = cardTitles[cardId];
             
             // Create placed card
             createPlacedCard(cardId, cardTitle, x, y);
