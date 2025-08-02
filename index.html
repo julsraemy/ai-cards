@@ -33,29 +33,11 @@
         }
 
         .header h1 {
-            font-size: 1.6rem;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             font-weight: 700;
             line-height: 1.3;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .instructions {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            color: white;
-            text-align: center;
-            font-size: 0.9rem;
         }
 
         .main-container {
@@ -362,9 +344,9 @@
         }
 
         .question-text {
-            font-weight: 700;
+            font-weight: 600;
             color: #333;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .modal-buttons {
@@ -596,7 +578,7 @@
         }
 
         .solution-dot {
-            fill: #6b7280;
+            fill: #036409;
             stroke: #4b5563;
             stroke-width: 2;
         }
@@ -753,20 +735,10 @@
 <body>
     <div class="header">
         <h1>Information Science and information specialists working with AI, designing with AI and developing for AI</h1>
-        <h2>Interactive Venn Diagram Exercise</h2>
-        <div class="subtitle">Cards group into region dots - click dots to see and manage cards in each region</div>
+        <p>Cards group into region dots - click dots to see and manage cards in each Venn diagram region</p>
     </div>
 
     <div class="status-message" id="statusMessage"></div>
-
-    <div class="instructions">
-        <strong>Instructions:</strong> 
-        • <strong>Click</strong> any card title to view detailed descriptions and links
-        • <strong>Click "Assign Region"</strong> button to answer the three questions and place cards
-        • <strong>Cards appear as dots</strong> with all card numbers shown per region
-        • <strong>Click region dots</strong> to manage cards in that region (reposition or remove)
-        • Consider each card's Point of View (POV) to determine the appropriate answers
-    </div>
 
     <div class="main-container">
         <div class="cards-panel">
@@ -987,7 +959,7 @@
 
         <!-- Solution Diagram -->
         <div class="solution-diagram">
-            <h4>Proposed Solution - Visual Diagram</h4>
+            <h4>Proposed Solution - Venn Diagram</h4>
             <svg class="solution-svg" viewBox="0 0 450 325">
                 <!-- Working with AI Circle -->
                 <circle cx="145" cy="100" r="90" class="zone-circle working-zone" opacity="0.3"/>
@@ -999,9 +971,9 @@
                 <circle cx="225" cy="205" r="90" class="zone-circle developing-zone" opacity="0.3"/>
 
                 <!-- Zone Labels -->
-                <text x="90" y="60" class="zone-label" font-size="12">Working</text>
-                <text x="360" y="60" class="zone-label" font-size="12">Designing</text>
-                <text x="225" y="315" class="zone-label" font-size="12">Developing</text>
+                <text x="90" y="60" class="zone-label" font-size="12">Working with AI</text>
+                <text x="360" y="60" class="zone-label" font-size="12">Designing with AI</text>
+                <text x="225" y="315" class="zone-label" font-size="12">Developing for AI</text>
 
                 <!-- Solution dots with card numbers -->
                 <!-- Only Working with AI -->
