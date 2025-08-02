@@ -16,13 +16,13 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 1rem;
-            touch-action: manipulation; /* Improve touch responsiveness */
-            overscroll-behavior: contain; /* Prevent overscroll on mobile */
+            touch-action: manipulation;
+            overscroll-behavior: contain;
         }
 
         @media (max-width: 768px) {
             body {
-                padding: 0.5rem; /* Less padding on mobile for more space */
+                padding: 0.5rem;
             }
         }
 
@@ -87,12 +87,12 @@
             border-radius: 8px;
             padding: 0.8rem;
             margin-bottom: 0.5rem;
-            cursor: grab;
+            cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             position: relative;
-            touch-action: none; /* Prevent default touch behaviors */
-            user-select: none; /* Prevent text selection during drag */
+            user-select: none;
+            border: 3px solid transparent;
         }
 
         .card-item:hover {
@@ -104,9 +104,14 @@
             transform: scale(0.98);
         }
 
-        .card-item.dragging {
+        .card-item.selected {
+            border-color: #355cc9;
+            background: #f0f7ff;
+        }
+
+        .card-item.placed {
             opacity: 0.5;
-            cursor: grabbing;
+            background: #f5f5f5;
         }
 
         .card-number {
@@ -139,12 +144,42 @@
             font-style: italic;
         }
 
+        .click-hint {
+            font-size: 0.6rem;
+            color: #999;
+            text-align: center;
+            margin-top: 0.3rem;
+        }
+
+        .assign-btn {
+            background: #355cc9 !important;
+            color: white !important;
+            border: 2px solid #2a4aa3 !important;
+            padding: 0.6rem 0.8rem !important;
+            border-radius: 15px !important;
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            margin-top: 0.5rem !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+            text-align: center !important;
+            display: block !important;
+        }
+
+        .assign-btn:hover {
+            background: #2a4aa3 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.3) !important;
+        }
+
         .venn-container {
             position: relative;
-            height: 700px; /* Bigger on desktop too */
+            height: 600px;
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             overflow: hidden;
+            padding: 10px;
         }
 
         .venn-svg {
@@ -152,40 +187,16 @@
             height: 100%;
         }
 
-        .drop-zone {
+        .zone-circle {
             fill-opacity: 0.2;
             stroke-width: 4;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .drop-zone.drag-over {
-            fill-opacity: 0.7;
-            stroke-width: 6;
-        }
-
-        /* Highlight all drop zones when dragging */
-        body.dragging .drop-zone {
+        .zone-circle:hover {
             fill-opacity: 0.4;
             stroke-width: 6;
-            animation: pulse-zone 1.5s infinite;
-        }
-
-        body.dragging .drop-zone.drag-over {
-            fill-opacity: 0.8;
-            stroke-width: 8;
-            animation: pulse-zone-active 1s infinite;
-        }
-
-        @keyframes pulse-zone {
-            0% { stroke-width: 6; fill-opacity: 0.4; }
-            50% { stroke-width: 8; fill-opacity: 0.6; }
-            100% { stroke-width: 6; fill-opacity: 0.4; }
-        }
-
-        @keyframes pulse-zone-active {
-            0% { stroke-width: 8; fill-opacity: 0.8; }
-            50% { stroke-width: 10; fill-opacity: 0.95; }
-            100% { stroke-width: 8; fill-opacity: 0.8; }
         }
 
         .working-zone { fill: #ff4444; stroke: #cc0000; }
@@ -199,64 +210,316 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             text-anchor: middle;
             pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        /* Make labels more visible during dragging */
-        body.dragging .zone-label {
-            font-size: 18px;
-            font-weight: 800;
-            text-shadow: 3px 3px 8px rgba(0,0,0,0.9);
-            animation: glow-text 2s infinite;
-        }
-
-        @keyframes glow-text {
-            0% { text-shadow: 3px 3px 8px rgba(0,0,0,0.9); }
-            50% { text-shadow: 3px 3px 12px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5); }
-            100% { text-shadow: 3px 3px 8px rgba(0,0,0,0.9); }
         }
 
         .placed-card {
-            position: absolute;
-            background: white;
-            border-radius: 6px;
-            padding: 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            cursor: grab;
-            min-width: 80px;
-            z-index: 10;
-            touch-action: none;
-            user-select: none;
+            position: absolute !important;
+            background: #6b7280 !important;
+            border-radius: 8px !important;
+            padding: 0.5rem !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+            cursor: pointer !important;
+            min-width: 70px !important;
+            max-width: 120px !important;
+            z-index: 1000 !important;
+            border: 2px solid #4b5563 !important;
+            color: white !important;
+            animation: gentle-pulse 3s infinite !important;
         }
 
         .placed-card:hover {
-            transform: scale(1.05);
-            z-index: 20;
+            transform: scale(1.1) !important;
+            z-index: 2000 !important;
+            background: #4b5563 !important;
         }
 
-        .controls {
+        @keyframes gentle-pulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+
+        /* Mobile-specific sizing for placed cards */
+        @media (max-width: 768px) {
+            .placed-card {
+                font-size: 0.5rem !important;
+                padding: 0.3rem !important;
+                min-width: 50px !important;
+                max-width: 80px !important;
+                border: 2px solid #4b5563 !important;
+                border-radius: 6px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .placed-card {
+                font-size: 0.4rem !important;
+                padding: 0.2rem !important;
+                min-width: 40px !important;
+                max-width: 60px !important;
+                border: 1px solid #4b5563 !important;
+                border-radius: 4px !important;
+            }
+        }
+
+        /* SUPER SIMPLE MODAL - GUARANTEED VISIBLE */
+        .simple-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            z-index: 999999;
+        }
+
+        .simple-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 50px rgba(255,255,255,0.5);
+            border: 5px solid #355cc9;
+        }
+
+        .modal-title {
+            color: #355cc9;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
             text-align: center;
+        }
+
+        .modal-instruction {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-style: italic;
+            background: #f8f9ff;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .question-box {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
             margin: 1rem 0;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .question-box:hover {
+            border-color: #355cc9;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.2);
+        }
+
+        .question-box.selected {
+            border-color: #355cc9;
+            background: #f0f7ff;
+            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.3);
+        }
+
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #355cc9;
+            border-radius: 8px;
+            margin-right: 1rem;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #355cc9;
+            transform: scale(1.1);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .question-text {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
         }
 
         .btn {
             background: rgba(255,255,255,0.2);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            margin: 0 0.5rem;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .btn:hover {
             background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            border: 1px solid #6c757d;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .btn-place {
+            background: #22c55e !important;
+            color: white !important;
+            border: 3px solid #16a34a !important;
+            font-size: 1.3rem !important;
+            font-weight: 700 !important;
+            padding: 1rem 2rem !important;
+            border-radius: 15px !important;
+            cursor: pointer !important;
+            animation: pulse-green 2s infinite !important;
+            min-width: 150px !important;
+        }
+
+        .btn-place:hover {
+            background: #16a34a !important;
+            transform: scale(1.05) !important;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px 10px rgba(34, 197, 94, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        }
+
+        .close-x {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-x:hover {
+            color: #333;
+        }
+
+        /* Details Modal */
+        .details-modal {
+            display: none;
+            position: fixed;
+            z-index: 999998;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .details-modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .details-modal-title {
+            color: #355cc9;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .details-modal-pov {
+            background: linear-gradient(135deg, #355cc9, #4a90e2);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .details-modal-description {
+            color: #333;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+        }
+
+        .details-modal-links {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .details-modal-link {
+            background: #355cc9;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .details-modal-link:hover {
+            background: #2a4aa3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.3);
+        }
+
+        .controls {
+            text-align: center;
+            margin: 1rem 0;
         }
 
         .legend {
@@ -309,107 +572,56 @@
             padding-left: 0.5rem;
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
+        /* Solution diagram styles */
+        .solution-diagram {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            position: relative;
+            height: 300px;
+        }
+
+        .solution-diagram h4 {
+            color: white;
+            text-align: center;
+            margin: 0 0 1rem 0;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .solution-svg {
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
         }
 
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        .solution-dot {
+            fill: #6b7280;
+            stroke: #4b5563;
+            stroke-width: 2;
         }
 
-        .modal-header {
-            margin-bottom: 1rem;
-        }
-
-        .modal-title {
-            color: #355cc9;
-            font-size: 1.5rem;
+        .solution-text {
+            fill: white;
+            font-size: 10px;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            text-anchor: middle;
+            pointer-events: none;
         }
 
-        .modal-pov {
-            background: linear-gradient(135deg, #355cc9, #4a90e2);
+        .status-message {
+            background: rgba(0,255,0,0.3);
             color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .modal-description {
-            color: #333;
-            line-height: 1.6;
-            margin: 1.5rem 0;
-            font-size: 1rem;
-        }
-
-        .modal-links {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .modal-link {
-            background: #355cc9;
-            color: white;
-            padding: 0.6rem 1.2rem;
+            padding: 1rem;
             border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .modal-link:hover {
-            background: #2a4aa3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(53, 92, 201, 0.3);
-        }
-
-        .close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #999;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover {
-            color: #333;
-        }
-
-        .click-hint {
-            font-size: 0.6rem;
-            color: #999;
+            margin: 0.5rem 0;
             text-align: center;
-            margin-top: 0.3rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .status-error {
+            background: rgba(255,0,0,0.3);
         }
 
         @media (max-width: 1024px) {
@@ -420,13 +632,13 @@
             
             .cards-panel {
                 order: 2;
-                max-height: 25vh; /* Much smaller to give more room for diagram */
+                max-height: 25vh;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
             
             .venn-container {
-                height: 80vh; /* Much bigger - 80% of viewport height */
+                height: 70vh;
                 margin-bottom: 1rem;
             }
             
@@ -435,30 +647,9 @@
             }
 
             .zone-label {
-                font-size: 20px; /* Even larger labels */
-                font-weight: 800;
-                text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
-            }
-            
-            .placed-card {
-                font-size: 0.9rem; /* Larger text on mobile */
-                padding: 0.8rem;
-                min-width: 100px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .venn-container {
-                height: 75vh; /* Still very large on phones */
-            }
-            
-            .cards-panel {
-                max-height: 20vh; /* Even smaller panel */
-            }
-            
-            .zone-label {
                 font-size: 18px;
                 font-weight: 800;
+                text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
             }
             
             .placed-card {
@@ -468,13 +659,93 @@
             }
         }
 
-        @media (min-width: 1400px) {
+        @media (max-width: 768px) {
             .venn-container {
-                height: 800px; /* Much larger on big screens */
+                height: 65vh;
+            }
+            
+            .cards-panel {
+                max-height: 20vh;
             }
             
             .zone-label {
-                font-size: 20px;
+                font-size: 16px;
+                font-weight: 800;
+            }
+            
+            .placed-card {
+                font-size: 0.7rem;
+                padding: 0.5rem;
+                min-width: 80px;
+            }
+
+            .simple-modal-content {
+                margin: 5% auto;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Region dots that show all cards in that region */
+        .region-dot {
+            position: absolute;
+            min-width: 30px;
+            min-height: 30px;
+            background: #6b7280;
+            border: 3px solid #4b5563;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            z-index: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            padding: 3px;
+        }
+
+        .region-dot:hover {
+            transform: scale(1.1);
+            background: #4b5563;
+            box-shadow: 0 4px 15px rgba(75, 85, 99, 0.4);
+        }
+
+        .region-dot.empty {
+            display: none;
+        }
+
+        /* Scale circle based on number of cards */
+        .region-dot.size-1 { min-width: 30px; min-height: 30px; font-size: 12px; }
+        .region-dot.size-2 { min-width: 40px; min-height: 40px; font-size: 11px; }
+        .region-dot.size-3 { min-width: 50px; min-height: 50px; font-size: 10px; }
+        .region-dot.size-4 { min-width: 60px; min-height: 60px; font-size: 9px; }
+        .region-dot.size-5 { min-width: 70px; min-height: 70px; font-size: 8px; }
+
+        @media (max-width: 768px) {
+            .region-dot.size-1 { min-width: 25px; min-height: 25px; font-size: 10px; }
+            .region-dot.size-2 { min-width: 35px; min-height: 35px; font-size: 9px; }
+            .region-dot.size-3 { min-width: 45px; min-height: 45px; font-size: 8px; }
+            .region-dot.size-4 { min-width: 55px; min-height: 55px; font-size: 7px; }
+            .region-dot.size-5 { min-width: 65px; min-height: 65px; font-size: 6px; }
+        }
+
+        @media (max-width: 480px) {
+            .region-dot.size-1 { min-width: 22px; min-height: 22px; font-size: 9px; }
+            .region-dot.size-2 { min-width: 30px; min-height: 30px; font-size: 8px; }
+            .region-dot.size-3 { min-width: 38px; min-height: 38px; font-size: 7px; }
+            .region-dot.size-4 { min-width: 46px; min-height: 46px; font-size: 6px; }
+            .region-dot.size-5 { min-width: 54px; min-height: 54px; font-size: 5px; }
+        }
+
+        @media (min-width: 1400px) {
+            .venn-container {
+                height: 650px;
+            }
+            
+            .zone-label {
+                font-size: 18px;
             }
         }
     </style>
@@ -483,125 +754,159 @@
     <div class="header">
         <h1>Information Science and information specialists working with AI, designing with AI and developing for AI</h1>
         <h2>Interactive Venn Diagram Exercise</h2>
-        <div class="subtitle">Drag cards to the appropriate regions</div>
+        <div class="subtitle">Cards group into yellow region dots - click dots to see and manage cards in each region</div>
     </div>
+
+    <div class="status-message" id="statusMessage"></div>
 
     <div class="instructions">
         <strong>Instructions:</strong> 
-        • <strong>Click</strong> any card to view detailed descriptions and links
-        • <strong>Drag</strong> cards from the left panel or the panel below (if you are using a smaller screen) and drop them onto the Venn diagram regions
-        • <strong>Double-click</strong> placed cards to return them to the panel
-        • Consider each card's Point of View (POV) to determine the appropriate category
+        • <strong>Click</strong> any card title to view detailed descriptions and links
+        • <strong>Click "Assign Region"</strong> button to answer the three questions and place cards
+        • <strong>Cards appear as yellow dots</strong> with all card numbers shown per region
+        • <strong>Click yellow region dots</strong> to manage cards in that region (reposition or remove)
+        • Consider each card's Point of View (POV) to determine the appropriate answers
     </div>
 
     <div class="main-container">
         <div class="cards-panel">
             <div class="cards-title">Available Cards</div>
             <div id="cards-container">
-                <div class="card-item" data-card="1" draggable="true">
+                <div class="card-item" data-card="1">
                     <div class="card-number">01</div>
                     <div class="card-title">Annif</div>
                     <div class="card-pov">Subject Cataloger</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(1)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="2" draggable="true">
+                <div class="card-item" data-card="2">
                     <div class="card-number">02</div>
                     <div class="card-title">Citation and Best Practices Guidelines</div>
                     <div class="card-pov">University Librarian</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(2)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="3" draggable="true">
+                <div class="card-item" data-card="3">
                     <div class="card-number">03</div>
                     <div class="card-title">RAG Chatbot</div>
                     <div class="card-pov">Data Scientist</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(3)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="4" draggable="true">
+                <div class="card-item" data-card="4">
                     <div class="card-number">04</div>
                     <div class="card-title">MCP + IIIF Integration</div>
                     <div class="card-pov">Software Developer</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(4)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="5" draggable="true">
+                <div class="card-item" data-card="5">
                     <div class="card-number">05</div>
                     <div class="card-title">Image Similarity Search</div>
                     <div class="card-pov">Archivist</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(5)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="6" draggable="true">
+                <div class="card-item" data-card="6">
                     <div class="card-number">06</div>
                     <div class="card-title">E-Periodica Next Level Access</div>
                     <div class="card-pov">Metadata Librarian</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(6)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="7" draggable="true">
+                <div class="card-item" data-card="7">
                     <div class="card-number">07</div>
                     <div class="card-title">VSA-AAS White Paper on ML</div>
                     <div class="card-pov">Archive Director</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(7)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="8" draggable="true">
+                <div class="card-item" data-card="8">
                     <div class="card-number">08</div>
                     <div class="card-title">AI Bots vs Open Data</div>
                     <div class="card-pov">Data Steward</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(8)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="9" draggable="true">
+                <div class="card-item" data-card="9">
                     <div class="card-number">09</div>
                     <div class="card-title">Open Library Data Dumps</div>
                     <div class="card-pov">Data Curator</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(9)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="10" draggable="true">
+                <div class="card-item" data-card="10">
                     <div class="card-number">10</div>
                     <div class="card-title">HTR with Transkribus</div>
                     <div class="card-pov">Medieval Manuscripts Archivist</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(10)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="11" draggable="true">
+                <div class="card-item" data-card="11">
                     <div class="card-number">11</div>
                     <div class="card-title">IIIF Tsukushi Viewer</div>
                     <div class="card-pov">Systems Librarian</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(11)">Assign Region</button>
                 </div>
-                <div class="card-item" data-card="12" draggable="true">
+                <div class="card-item" data-card="12">
                     <div class="card-number">12</div>
                     <div class="card-title">eluxemburgensia Chatbot</div>
                     <div class="card-pov">Historian</div>
-                    <div class="click-hint">Click for details</div>
+                    <button class="assign-btn" onclick="openQuestionsModal(12)">Assign Region</button>
                 </div>
             </div>
         </div>
 
         <div class="venn-container" id="venn-container">
-            <svg class="venn-svg" viewBox="0 0 800 600">
+            <svg class="venn-svg" viewBox="0 0 900 650">
                 <!-- Working with AI Circle -->
-                <circle cx="240" cy="170" r="200" class="drop-zone working-zone" data-zone="working"/>
+                <circle cx="290" cy="200" r="180" class="zone-circle working-zone" data-zone="working"/>
                 
                 <!-- Designing with AI Circle -->
-                <circle cx="560" cy="170" r="200" class="drop-zone designing-zone" data-zone="designing"/>
+                <circle cx="610" cy="200" r="180" class="zone-circle designing-zone" data-zone="designing"/>
                 
                 <!-- Developing for AI Circle -->
-                <circle cx="400" cy="390" r="200" class="drop-zone developing-zone" data-zone="developing"/>
+                <circle cx="450" cy="410" r="180" class="zone-circle developing-zone" data-zone="developing"/>
 
                 <!-- Zone Labels -->
-                <text x="130" y="90" class="zone-label">Working with AI</text>
-                <text x="670" y="90" class="zone-label">Designing with AI</text>
-                <text x="400" y="580" class="zone-label">Developing for AI</text>
+                <text x="180" y="120" class="zone-label">Working with AI</text>
+                <text x="720" y="120" class="zone-label">Designing with AI</text>
+                <text x="450" y="600" class="zone-label">Developing for AI</text>
             </svg>
         </div>
     </div>
 
-    <!-- Modal for card details -->
-    <div id="cardModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <div class="modal-pov" id="modalPOV"></div>
+    <!-- SUPER SIMPLE THREE-QUESTION MODAL -->
+    <div id="questionsModal" class="simple-modal">
+        <div class="simple-modal-content">
+            <div class="close-x" onclick="closeQuestionsModal()">&times;</div>
+            <h2 class="modal-title" id="questionsTitle">Answer the Three Questions</h2>
+            <div class="modal-instruction">
+                Check the boxes for "Yes" answers. Leave unchecked for "No" answers.
             </div>
-            <div class="modal-description" id="modalDescription"></div>
-            <div class="modal-links" id="modalLinks"></div>
+            
+            <div class="question-box" onclick="toggleQuestion('working')">
+                <div class="checkbox" id="checkbox-working"></div>
+                <div class="question-text">Working with AI?</div>
+            </div>
+            
+            <div class="question-box" onclick="toggleQuestion('designing')">
+                <div class="checkbox" id="checkbox-designing"></div>
+                <div class="question-text">Designing with AI?</div>
+            </div>
+            
+            <div class="question-box" onclick="toggleQuestion('developing')">
+                <div class="checkbox" id="checkbox-developing"></div>
+                <div class="question-text">Developing for AI?</div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeQuestionsModal()">Cancel</button>
+                <button class="btn btn-place" onclick="placeCard()">✅ PLACE CARD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="detailsModal" class="details-modal">
+        <div class="details-modal-content">
+            <span class="close-x" onclick="closeDetailsModal()">&times;</span>
+            <div>
+                <h2 class="details-modal-title" id="detailsTitle"></h2>
+                <div class="details-modal-pov" id="detailsPOV"></div>
+            </div>
+            <div class="details-modal-description" id="detailsDescription"></div>
+            <div class="details-modal-links" id="detailsLinks"></div>
         </div>
     </div>
 
@@ -679,33 +984,76 @@
                 03 - RAG Chatbot (building system + policy framework + daily use)
             </div>
         </div>
+
+        <!-- Solution Diagram -->
+        <div class="solution-diagram">
+            <h4>Proposed Solution - Visual Diagram</h4>
+            <svg class="solution-svg" viewBox="0 0 450 325">
+                <!-- Working with AI Circle -->
+                <circle cx="145" cy="100" r="90" class="zone-circle working-zone" opacity="0.3"/>
+                
+                <!-- Designing with AI Circle -->
+                <circle cx="305" cy="100" r="90" class="zone-circle designing-zone" opacity="0.3"/>
+                
+                <!-- Developing for AI Circle -->
+                <circle cx="225" cy="205" r="90" class="zone-circle developing-zone" opacity="0.3"/>
+
+                <!-- Zone Labels -->
+                <text x="90" y="60" class="zone-label" font-size="12">Working</text>
+                <text x="360" y="60" class="zone-label" font-size="12">Designing</text>
+                <text x="225" y="315" class="zone-label" font-size="12">Developing</text>
+
+                <!-- Solution dots with card numbers -->
+                <!-- Only Working with AI -->
+                <circle cx="125" cy="75" r="15" class="solution-dot"/>
+                <text x="125" y="80" class="solution-text">01; 10; 12</text>
+                
+                <!-- Only Designing with AI -->
+                <circle cx="325" cy="75" r="15" class="solution-dot"/>
+                <text x="325" y="80" class="solution-text">07; 08</text>
+                
+                <!-- Only Developing for AI -->
+                <circle cx="225" cy="240" r="15" class="solution-dot"/>
+                <text x="225" y="245" class="solution-text">04; 06; 09</text>
+                
+                <!-- Working + Designing -->
+                <circle cx="225" cy="75" r="15" class="solution-dot"/>
+                <text x="225" y="80" class="solution-text">02; 11</text>
+                
+                <!-- Working + Developing -->
+                <circle cx="185" cy="152" r="15" class="solution-dot"/>
+                <text x="185" y="157" class="solution-text">05</text>
+                
+                <!-- All Three Categories -->
+                <circle cx="225" cy="135" r="15" class="solution-dot"/>
+                <text x="225" y="140" class="solution-text">03</text>
+            </svg>
+        </div>
     </div>
 
     <script>
-        let draggedCard = null;
+        // SIMPLE GLOBALS
+        let currentCardId = null;
+        let selectedAnswers = [];
         let placedCards = new Map();
-        let isDragging = false;
-        let dragClone = null;
-        let startTime = 0;
-        let startX = 0;
-        let startY = 0;
-        let currentCard = null;
-        let lastTapTime = 0;
+        let clickTimer = null;
 
-        // Card titles for display
+        // Card data
         const cardTitles = {
-            1: "Annif",
-            2: "Citation and Best Practices Guidelines",
-            3: "RAG Chatbot",
-            4: "MCP + IIIF",
-            5: "Image Similarity",
-            6: "E-Periodica NLA",
-            7: "VSA-AAS Paper",
-            8: "AI Bots vs Open Data",
-            9: "Open Library",
-            10: "HTR Transkribus",
-            11: "Tsukushi Viewer",
-            12: "eluxemburgensia"
+            1: "Annif", 2: "Citation Guidelines", 3: "RAG Chatbot", 4: "MCP + IIIF",
+            5: "Image Similarity", 6: "E-Periodica NLA", 7: "VSA-AAS Paper", 8: "AI Bots vs Open Data",
+            9: "Open Library", 10: "HTR Transkribus", 11: "Tsukushi Viewer", 12: "eluxemburgensia"
+        };
+
+        // FIXED POSITIONING - Match actual SVG circles
+        const regionPositions = {
+            'working': { x: 290, y: 200 },                    // Only Working (matches SVG cx="290" cy="200")
+            'designing': { x: 610, y: 200 },                 // Only Designing (matches SVG cx="610" cy="200")
+            'developing': { x: 450, y: 410 },                // Only Developing (matches SVG cx="450" cy="410")
+            'working,designing': { x: 450, y: 150 },         // Working + Designing (intersection)
+            'working,developing': { x: 370, y: 305 },        // Working + Developing (intersection)
+            'designing,developing': { x: 530, y: 305 },      // Designing + Developing (intersection)
+            'working,designing,developing': { x: 450, y: 270 } // All Three (center)
         };
 
         // Card detailed information
@@ -833,577 +1181,469 @@
             }
         };
 
-      // Drag and drop event handlers
+        // STATUS MESSAGES
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('statusMessage');
+            status.textContent = message;
+            status.className = isError ? 'status-message status-error' : 'status-message';
+            status.style.display = 'block';
+            setTimeout(() => status.style.display = 'none', 3000);
+        }
+
+        // TEST MODAL
+        function testModal() {
+            console.log('Testing modal...');
+            showStatus('Opening test modal...', false);
+            openQuestionsModal(1);
+        }
+
+        // TEST RED BUTTONS
+        function testRedButtons() {
+            const buttons = document.querySelectorAll('.assign-btn');
+            console.log('Found', buttons.length, 'assign buttons');
+            
+            if (buttons.length === 0) {
+                alert('❌ No red buttons found! You are using an OLD version. Please download the NEW version!');
+            } else {
+                alert(`✅ Found ${buttons.length} red "Assign Region" buttons! They should be pulsing red on each card.`);
+            }
+            
+            showStatus(`Found ${buttons.length} assign buttons`, buttons.length === 0);
+        }
+
+        // TEST PLACE CARD DIRECTLY
+        function testPlaceCard() {
+            console.log('🧪 TESTING PLACE CARD DIRECTLY...');
+            alert('Testing direct card placement - check console for details. You should see a yellow dot and red card.');
+            
+            // Force place card 1 in the "Working with AI" circle (SVG coordinates)
+            console.log('🧪 Forcing placement of card 1 in Working with AI circle...');
+            createPlacedCard(1, 290, 200); // Match the SVG circle position
+            
+            // Also mark the original card as placed
+            const originalCard = document.querySelector('[data-card="1"]');
+            if (originalCard) {
+                originalCard.classList.add('placed');
+                console.log('✅ Marked original card as placed');
+            }
+            
+            showStatus('Test card placed in Working with AI circle - look for red bouncing card and yellow debug dot!', false);
+        }
+
+        // SETUP CARD EVENTS
         document.addEventListener('DOMContentLoaded', function() {
-            const cardItems = document.querySelectorAll('.card-item');
-            const vennContainer = document.getElementById('venn-container');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const modal = document.getElementById('cardModal');
-            const closeBtn = document.querySelector('.close');
+            document.querySelectorAll('.card-item').forEach(card => {
+                // Click on card title/content for details (not on button)
+                card.addEventListener('click', function(e) {
+                    // Don't open details if clicking the assign button
+                    if (e.target.classList.contains('assign-btn')) {
+                        return;
+                    }
+                    
+                    if (clickTimer) return;
+                    
+                    clickTimer = setTimeout(() => {
+                        const cardId = parseInt(this.dataset.card);
+                        openDetailsModal(cardId);
+                        clickTimer = null;
+                    }, 100);
+                });
 
-            cardItems.forEach(card => {
-                // Mouse events
-                card.addEventListener('dragstart', handleDragStart);
-                card.addEventListener('dragend', handleDragEnd);
-                card.addEventListener('click', handleCardClick);
-                
-                // Universal touch/pointer handling for better compatibility
-                card.addEventListener('mousedown', handleUniversalStart);
-                card.addEventListener('touchstart', handleUniversalStart, {passive: false});
-                if (window.PointerEvent) {
-                    card.addEventListener('pointerdown', handleUniversalStart);
-                }
-            });
-
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', handleDragOver);
-                zone.addEventListener('drop', handleDrop);
-                zone.addEventListener('dragenter', handleDragEnter);
-                zone.addEventListener('dragleave', handleDragLeave);
-            });
-
-            vennContainer.addEventListener('dragover', handleDragOver);
-            vennContainer.addEventListener('drop', handleDropOnDiagram);
-
-            // Modal event handlers
-            closeBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
-        });
-
-        function handleDragStart(e) {
-            draggedCard = this;
-            this.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.outerHTML);
-        }
-
-        function handleCardClick(e) {
-            // Only handle click if not in middle of drag operation
-            if (isDragging || this.classList.contains('dragging')) {
-                return;
-            }
-            
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const cardId = parseInt(this.dataset.card);
-            openModal(cardId);
-        }
-
-        function openModal(cardId) {
-            const cardData = cardDetails[cardId];
-            if (!cardData) return;
-
-            document.getElementById('modalTitle').textContent = cardData.title;
-            document.getElementById('modalPOV').textContent = cardData.pov;
-            document.getElementById('modalDescription').innerHTML = cardData.description;
-            
-            const linksContainer = document.getElementById('modalLinks');
-            linksContainer.innerHTML = '';
-            
-            cardData.links.forEach(link => {
-                const linkElement = document.createElement('a');
-                linkElement.href = link.url;
-                linkElement.target = '_blank';
-                linkElement.className = 'modal-link';
-                linkElement.textContent = link.text;
-                linksContainer.appendChild(linkElement);
-            });
-
-            document.getElementById('cardModal').style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-
-        function closeModal() {
-            document.getElementById('cardModal').style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
-
-        // Universal drag handling for all browsers and devices
-        function handleUniversalStart(e) {
-            // Don't interfere with existing drag operations or mouse events on desktop
-            if (e.type === 'mousedown' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
-                return;
-            }
-            
-            // Prevent default for touch events
-            if (e.type === 'touchstart' || e.type === 'pointerdown') {
-                e.preventDefault();
-            }
-            
-            startTime = Date.now();
-            currentCard = this;
-            isDragging = false;
-            
-            // Get coordinates based on event type
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || e.pageX;
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY) || e.pageY;
-            
-            startX = clientX;
-            startY = clientY;
-            
-            // Add move and end listeners to document for better tracking
-            document.addEventListener('mousemove', handleUniversalMove);
-            document.addEventListener('touchmove', handleUniversalMove, {passive: false});
-            document.addEventListener('pointermove', handleUniversalMove, {passive: false});
-            
-            document.addEventListener('mouseup', handleUniversalEnd);
-            document.addEventListener('touchend', handleUniversalEnd);
-            document.addEventListener('pointerup', handleUniversalEnd);
-            
-            // Prevent context menu
-            document.addEventListener('contextmenu', preventContext);
-            
-            // Visual feedback
-            this.style.transform = 'scale(0.95)';
-        }
-
-        function handleUniversalMove(e) {
-            if (!currentCard) return;
-            
-            // Get coordinates based on event type
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX) || e.pageX;
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY) || e.pageY;
-            
-            const deltaX = Math.abs(clientX - startX);
-            const deltaY = Math.abs(clientY - startY);
-            const moveThreshold = 20; // Increased for better reliability
-            
-            // Start dragging if moved enough
-            if (!isDragging && (deltaX > moveThreshold || deltaY > moveThreshold)) {
-                isDragging = true;
-                
-                // Prevent scrolling during drag
-                document.body.style.overflow = 'hidden';
-                document.body.style.position = 'fixed';
-                document.body.style.width = '100%';
-                
-                // Create drag clone
-                createUniversalDragClone(currentCard, clientX, clientY);
-                
-                // Prevent all default behaviors
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            
-            // Update clone position if dragging
-            if (isDragging && dragClone) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const rect = dragClone.getBoundingClientRect();
-                dragClone.style.left = (clientX - rect.width / 2) + 'px';
-                dragClone.style.top = (clientY - rect.height / 2) + 'px';
-                
-                // Highlight drop zone under cursor
-                highlightDropZone(clientX, clientY);
-            }
-        }
-
-        function handleUniversalEnd(e) {
-            if (!currentCard) return;
-            
-            const duration = Date.now() - startTime;
-            const currentTime = Date.now();
-            
-            // Get coordinates based on event type
-            const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX) || e.pageX;
-            const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY) || e.pageY;
-            
-            // Clean up event listeners
-            document.removeEventListener('mousemove', handleUniversalMove);
-            document.removeEventListener('touchmove', handleUniversalMove);
-            document.removeEventListener('pointermove', handleUniversalMove);
-            
-            document.removeEventListener('mouseup', handleUniversalEnd);
-            document.removeEventListener('touchend', handleUniversalEnd);
-            document.removeEventListener('pointerup', handleUniversalEnd);
-            
-            document.removeEventListener('contextmenu', preventContext);
-            
-            // Restore scrolling
-            document.body.style.overflow = 'auto';
-            document.body.style.position = 'static';
-            document.body.style.width = 'auto';
-            
-            // Reset visual feedback
-            currentCard.style.transform = '';
-            
-            // Handle tap vs drag
-            if (!isDragging && duration < 400) {
-                // Check for double-tap on placed cards
-                if (currentCard.dataset.placedCard && currentTime - lastTapTime < 600) {
-                    cleanupDrag();
-                    returnCardToPanel(currentCard.dataset.placedCard);
-                    lastTapTime = 0;
-                    return;
-                }
-                
-                lastTapTime = currentTime;
-                cleanupDrag();
-                
-                // Open modal
-                const cardId = parseInt(currentCard.dataset.card || currentCard.dataset.placedCard);
-                openModal(cardId);
-                return;
-            }
-            
-            // Handle drop if was dragging
-            if (isDragging && dragClone) {
-                handleUniversalDrop(clientX, clientY);
-            }
-            
-            cleanupDrag();
-        }
-
-        function createUniversalDragClone(sourceCard, clientX, clientY) {
-            const rect = sourceCard.getBoundingClientRect();
-            dragClone = sourceCard.cloneNode(true);
-            
-            dragClone.style.position = 'fixed';
-            dragClone.style.zIndex = '2000';
-            dragClone.style.width = Math.max(rect.width, 100) + 'px'; // Minimum width for visibility
-            dragClone.style.height = Math.max(rect.height, 60) + 'px'; // Minimum height
-            dragClone.style.pointerEvents = 'none';
-            dragClone.style.opacity = '0.9';
-            dragClone.style.transform = 'rotate(3deg) scale(1.2)'; // Bigger on mobile
-            dragClone.style.boxShadow = '0 15px 35px rgba(0,0,0,0.5)';
-            dragClone.style.border = '3px solid #355cc9'; // Visible border
-            dragClone.style.left = (clientX - rect.width / 2) + 'px';
-            dragClone.style.top = (clientY - rect.height / 2) + 'px';
-            dragClone.style.borderRadius = '8px';
-            
-            // Add a visual indicator
-            const indicator = document.createElement('div');
-            indicator.style.position = 'absolute';
-            indicator.style.top = '-10px';
-            indicator.style.right = '-10px';
-            indicator.style.width = '20px';
-            indicator.style.height = '20px';
-            indicator.style.backgroundColor = '#355cc9';
-            indicator.style.borderRadius = '50%';
-            indicator.style.animation = 'pulse 1s infinite';
-            dragClone.appendChild(indicator);
-            
-            // Add pulse animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: scale(1); opacity: 1; }
-                    50% { transform: scale(1.2); opacity: 0.7; }
-                    100% { transform: scale(1); opacity: 1; }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            document.body.appendChild(dragClone);
-            sourceCard.style.opacity = '0.3';
-            
-            // Add body class for drag state
-            document.body.classList.add('dragging');
-        }
-
-        function handleUniversalDrop(clientX, clientY) {
-            const elementBelow = document.elementFromPoint(clientX, clientY);
-            
-            // Check if dropped on Venn diagram
-            const vennContainer = document.getElementById('venn-container');
-            if (vennContainer && (vennContainer.contains(elementBelow) || elementBelow === vennContainer)) {
-                const rect = vennContainer.getBoundingClientRect();
-                const x = clientX - rect.left;
-                const y = clientY - rect.top;
-                
-                // Get card ID
-                let cardId;
-                if (currentCard.dataset.placedCard) {
-                    cardId = currentCard.dataset.placedCard;
-                } else {
-                    cardId = currentCard.dataset.card;
-                    currentCard.style.display = 'none';
-                }
-                
-                const cardTitle = cardTitles[cardId];
-                createPlacedCard(cardId, cardTitle, x, y);
-            }
-        }
-
-        function preventContext(e) {
-            e.preventDefault();
-        }
-
-        function cleanupDrag() {
-            if (dragClone) {
-                // Clear zone indicator
-                const indicator = dragClone.querySelector('.zone-indicator');
-                if (indicator) {
-                    indicator.remove();
-                }
-                dragClone.remove();
-                dragClone = null;
-            }
-            
-            if (currentCard) {
-                currentCard.style.opacity = '1';
-                currentCard.style.transform = '';
-                currentCard = null;
-            }
-            
-            // Remove body class
-            document.body.classList.remove('dragging');
-            
-            // Clear drop zone highlights
-            clearDropZoneHighlights();
-            
-            isDragging = false;
-            startTime = 0;
-        }
-
-        function highlightDropZone(clientX, clientY) {
-            // Clear previous highlights
-            clearDropZoneHighlights();
-            
-            // Check which drop zone we're over
-            const elementBelow = document.elementFromPoint(clientX, clientY);
-            const vennContainer = document.getElementById('venn-container');
-            
-            let currentZone = null;
-            
-            if (vennContainer && (vennContainer.contains(elementBelow) || elementBelow === vennContainer)) {
-                // Get SVG coordinates
-                const rect = vennContainer.getBoundingClientRect();
-                const svgX = (clientX - rect.left) / rect.width * 800; // Scale to SVG viewBox
-                const svgY = (clientY - rect.top) / rect.height * 600;
-                
-                // Check which circle we're in (updated coordinates for bigger circles)
-                const circles = [
-                    { cx: 240, cy: 170, r: 200, zone: 'working', name: 'Working with AI' },
-                    { cx: 560, cy: 170, r: 200, zone: 'designing', name: 'Designing with AI' },
-                    { cx: 400, cy: 390, r: 200, zone: 'developing', name: 'Developing for AI' }
-                ];
-                
-                circles.forEach(circle => {
-                    const distance = Math.sqrt(Math.pow(svgX - circle.cx, 2) + Math.pow(svgY - circle.cy, 2));
-                    if (distance <= circle.r) {
-                        const dropZone = document.querySelector(`[data-zone="${circle.zone}"]`);
-                        if (dropZone) {
-                            dropZone.classList.add('drag-over');
-                            currentZone = circle.name;
-                        }
+                // Double click for questions (backup method)
+                card.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    
+                    // Don't double-click on button
+                    if (e.target.classList.contains('assign-btn')) {
+                        return;
+                    }
+                    
+                    if (clickTimer) {
+                        clearTimeout(clickTimer);
+                        clickTimer = null;
+                    }
+                    
+                    const cardId = parseInt(this.dataset.card);
+                    
+                    if (this.classList.contains('placed')) {
+                        returnCardToPanel(cardId);
+                    } else {
+                        openQuestionsModal(cardId);
                     }
                 });
-            }
+            });
+
+            // Close modals when clicking outside
+            document.getElementById('questionsModal').addEventListener('click', function(e) {
+                if (e.target === this) closeQuestionsModal();
+            });
             
-            // Update drag clone to show current zone
-            updateDragCloneZone(currentZone);
-        }
+            document.getElementById('detailsModal').addEventListener('click', function(e) {
+                if (e.target === this) closeDetailsModal();
+            });
 
-        function updateDragCloneZone(zoneName) {
-            if (!dragClone) return;
+            // Create region dots when page loads
+            setTimeout(createRegionDots, 100);
+        });
+
+        // Update region dots on window resize
+        window.addEventListener('resize', function() {
+            setTimeout(createRegionDots, 100);
+        });
+
+        function openQuestionsModal(cardId) {
+            currentCardId = cardId;
+            selectedAnswers = [];
             
-            // Remove existing zone indicator
-            const existingIndicator = dragClone.querySelector('.zone-indicator');
-            if (existingIndicator) {
-                existingIndicator.remove();
-            }
+            // Update title
+            const title = document.getElementById('questionsTitle');
+            title.textContent = `"${cardTitles[cardId]}" - Answer the Three Questions`;
             
-            // Add new zone indicator if over a zone
-            if (zoneName) {
-                const indicator = document.createElement('div');
-                indicator.className = 'zone-indicator';
-                indicator.textContent = zoneName;
-                indicator.style.position = 'absolute';
-                indicator.style.bottom = '-35px';
-                indicator.style.left = '50%';
-                indicator.style.transform = 'translateX(-50%)';
-                indicator.style.background = '#355cc9';
-                indicator.style.color = 'white';
-                indicator.style.padding = '0.3rem 0.8rem';
-                indicator.style.borderRadius = '20px';
-                indicator.style.fontSize = '0.7rem';
-                indicator.style.fontWeight = '700';
-                indicator.style.whiteSpace = 'nowrap';
-                indicator.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-                indicator.style.animation = 'bounce 0.5s ease';
-                
-                dragClone.appendChild(indicator);
-                
-                // Add bounce animation if not already present
-                if (!document.querySelector('#bounce-style')) {
-                    const bounceStyle = document.createElement('style');
-                    bounceStyle.id = 'bounce-style';
-                    bounceStyle.textContent = `
-                        @keyframes bounce {
-                            0% { transform: translateX(-50%) translateY(10px); opacity: 0; }
-                            100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-                        }
-                    `;
-                    document.head.appendChild(bounceStyle);
-                }
-            }
-        }
-
-        function clearDropZoneHighlights() {
-            const dropZones = document.querySelectorAll('.drop-zone');
-            dropZones.forEach(zone => zone.classList.remove('drag-over'));
-        }
-
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            draggedCard = null;
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-        }
-
-        function handleDropOnDiagram(e) {
-            if (!draggedCard) return;
+            // Clear all checkboxes
+            ['working', 'designing', 'developing'].forEach(category => {
+                const checkbox = document.getElementById(`checkbox-${category}`);
+                const box = checkbox.closest('.question-box');
+                checkbox.classList.remove('checked');
+                box.classList.remove('selected');
+            });
             
-            e.preventDefault();
+            // Show modal
+            const modal = document.getElementById('questionsModal');
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
             
-            const rect = document.getElementById('venn-container').getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            showStatus(`Opened questions for "${cardTitles[cardId]}"`, false);
+        }
+
+        function closeQuestionsModal() {
+            document.getElementById('questionsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentCardId = null;
+            selectedAnswers = [];
+        }
+
+        function toggleQuestion(category) {
+            const checkbox = document.getElementById(`checkbox-${category}`);
+            const box = checkbox.closest('.question-box');
             
-            // Check if the dragged element is a placed card or original card
-            let cardId;
-            if (draggedCard.dataset.placedCard) {
-                // It's a placed card being moved
-                cardId = draggedCard.dataset.placedCard;
+            if (selectedAnswers.includes(category)) {
+                selectedAnswers = selectedAnswers.filter(c => c !== category);
+                checkbox.classList.remove('checked');
+                box.classList.remove('selected');
             } else {
-                // It's an original card from the panel
-                cardId = draggedCard.dataset.card;
-                // Hide the original card
-                draggedCard.style.display = 'none';
+                selectedAnswers.push(category);
+                checkbox.classList.add('checked');
+                box.classList.add('selected');
+            }
+        }
+
+        function placeCard() {
+            if (!currentCardId) {
+                showStatus('No card selected!', true);
+                return;
             }
             
-            const cardTitle = cardTitles[cardId];
+            if (selectedAnswers.length === 0) {
+                showStatus('Please answer at least one question!', true);
+                return;
+            }
+            
+            // FIXED: Proper sorting
+            const sorted = selectedAnswers.sort((a, b) => {
+                const order = ['working', 'designing', 'developing'];
+                return order.indexOf(a) - order.indexOf(b);
+            }).join(',');
+            
+            console.log('Selected answers:', selectedAnswers);
+            console.log('Sorted key:', sorted);
+            
+            const position = regionPositions[sorted];
+            if (!position) {
+                showStatus(`Invalid combination: ${sorted}`, true);
+                console.log('Available positions:', Object.keys(regionPositions));
+                return;
+            }
+            
+            // Mark card as placed
+            const card = document.querySelector(`[data-card="${currentCardId}"]`);
+            card.classList.add('placed');
             
             // Create placed card
-            createPlacedCard(cardId, cardTitle, x, y);
+            createPlacedCard(currentCardId, position.x, position.y);
+            
+            // Success message
+            const regions = selectedAnswers.map(a => {
+                const names = {working: 'Working', designing: 'Designing', developing: 'Developing'};
+                return names[a];
+            }).join(' + ');
+            
+            showStatus(`"${cardTitles[currentCardId]}" placed in: ${regions} with AI`, false);
+            
+            closeQuestionsModal();
         }
 
-        function createPlacedCard(cardId, title, x, y) {
-            // Remove existing placed card if it exists
-            const existingCard = document.querySelector(`[data-placed-card="${cardId}"]`);
-            if (existingCard) {
-                existingCard.remove();
-            }
+        function createPlacedCard(cardId, svgX, svgY) {
+            // Just store the card placement - the visual will be handled by region dots
+            placedCards.set(cardId, {x: svgX, y: svgY});
             
-            const placedCard = document.createElement('div');
-            placedCard.className = 'placed-card';
-            placedCard.dataset.placedCard = cardId;
-            placedCard.innerHTML = `<div style="font-size: 0.6em; font-weight: 700;">${cardId}</div><div>${title}</div>`;
-            placedCard.style.left = (x - 40) + 'px';
-            placedCard.style.top = (y - 20) + 'px';
-            
-            // Make it draggable within the diagram (mouse)
-            placedCard.draggable = true;
-            placedCard.addEventListener('dragstart', function(e) {
-                draggedCard = this;
-                e.dataTransfer.effectAllowed = 'move';
-            });
-            
-            // Universal drag handling
-            placedCard.addEventListener('mousedown', handleUniversalStart);
-            placedCard.addEventListener('touchstart', handleUniversalStart, {passive: false});
-            if (window.PointerEvent) {
-                placedCard.addEventListener('pointerdown', handleUniversalStart);
-            }
-            
-            // Click to view details
-            placedCard.addEventListener('click', function(e) {
-                if (!isDragging) { // Only if not dragging
-                    e.preventDefault();
+            // Update region dots to show all cards in each region
+            updateRegionDots();
+        }
+
+        // Create and manage region dots
+        function createRegionDots() {
+            const container = document.getElementById('venn-container');
+            if (!container) return;
+
+            // Remove existing region dots
+            container.querySelectorAll('.region-dot').forEach(dot => dot.remove());
+
+            const svg = container.querySelector('.venn-svg');
+            if (!svg) return;
+
+            const svgRect = svg.getBoundingClientRect();
+            const scaleX = svgRect.width / 900;
+            const scaleY = svgRect.height / 650;
+
+            // Create a dot for each region
+            Object.entries(regionPositions).forEach(([region, pos]) => {
+                const dot = document.createElement('div');
+                dot.className = 'region-dot empty';
+                dot.dataset.region = region;
+                
+                // Convert SVG to pixel coordinates
+                const pixelX = pos.x * scaleX - 17; // Center the dot
+                const pixelY = pos.y * scaleY - 17;
+
+                dot.style.left = pixelX + 'px';
+                dot.style.top = pixelY + 'px';
+
+                // Click handler to show cards in this region
+                dot.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    openModal(parseInt(cardId));
+                    showRegionCards(region);
+                });
+
+                container.appendChild(dot);
+            });
+
+            // Initial update
+            updateRegionDots();
+        }
+
+        // Update region dots to show which cards are in each region
+        function updateRegionDots() {
+            const dots = document.querySelectorAll('.region-dot');
+            
+            dots.forEach(dot => {
+                const region = dot.dataset.region;
+                const cardsInRegion = getCardsInRegion(region);
+                
+                // Remove existing size classes
+                dot.classList.remove('size-1', 'size-2', 'size-3', 'size-4', 'size-5');
+                
+                if (cardsInRegion.length === 0) {
+                    dot.classList.add('empty');
+                    dot.innerHTML = '';
+                    dot.title = '';
+                } else {
+                    dot.classList.remove('empty');
+                    
+                    // Add size class based on number of cards
+                    const sizeClass = `size-${Math.min(cardsInRegion.length, 5)}`;
+                    dot.classList.add(sizeClass);
+                    
+                    // Format card numbers with semicolons and zero padding
+                    const formattedNumbers = cardsInRegion
+                        .map(id => id.toString().padStart(2, '0'))
+                        .join('; ');
+                    
+                    dot.textContent = formattedNumbers;
+                    
+                    const regionName = getRegionName(region);
+                    const cardNames = cardsInRegion.map(id => `${id}. ${cardTitles[id]}`).join('\n');
+                    dot.title = `${regionName}\n\nCards: ${formattedNumbers}\n\nCards:\n${cardNames}\n\nClick to manage cards in this region`;
+                }
+            });
+        }
+
+        // Get all cards in a specific region
+        function getCardsInRegion(region) {
+            const regionPos = regionPositions[region];
+            const cardsInRegion = [];
+            
+            placedCards.forEach((cardData, cardId) => {
+                if (Math.abs(cardData.x - regionPos.x) < 10 && Math.abs(cardData.y - regionPos.y) < 10) {
+                    cardsInRegion.push(cardId);
                 }
             });
             
-            // Double-click to return to panel
-            placedCard.addEventListener('dblclick', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                returnCardToPanel(cardId);
-            });
+            return cardsInRegion.sort((a, b) => a - b);
+        }
+
+        // Get human-readable region name
+        function getRegionName(region) {
+            const names = {
+                'working': 'Working with AI',
+                'designing': 'Designing with AI', 
+                'developing': 'Developing for AI',
+                'working,designing': 'Working + Designing with AI',
+                'working,developing': 'Working + Developing for AI',
+                'designing,developing': 'Designing + Developing for AI',
+                'working,designing,developing': 'All Three: Working + Designing + Developing for AI'
+            };
+            return names[region] || region;
+        }
+
+        // Show cards in a region and allow management
+        function showRegionCards(region) {
+            const cardsInRegion = getCardsInRegion(region);
             
-            document.getElementById('venn-container').appendChild(placedCard);
-            placedCards.set(cardId, {x, y, title});
+            if (cardsInRegion.length === 0) {
+                showStatus('No cards in this region', true);
+                return;
+            }
+            
+            const regionName = getRegionName(region);
+            const cardList = cardsInRegion.map(id => `${id}. ${cardTitles[id]}`).join('\n');
+            
+            const action = prompt(`${regionName}\n\nCards in this region:\n${cardList}\n\nOptions:\n- Enter card number to reposition it\n- Type 'remove' + card number (e.g., 'remove 3') to remove a card\n- Press Cancel to close`);
+            
+            if (action) {
+                if (action.toLowerCase().startsWith('remove ')) {
+                    const cardId = parseInt(action.replace('remove ', ''));
+                    if (cardId && cardsInRegion.includes(cardId)) {
+                        returnCardToPanel(cardId);
+                    } else {
+                        showStatus('Invalid card number', true);
+                    }
+                } else {
+                    const cardId = parseInt(action);
+                    if (cardId && cardsInRegion.includes(cardId)) {
+                        openQuestionsModal(cardId);
+                    } else {
+                        showStatus('Invalid card number', true);
+                    }
+                }
+            }
         }
 
         function returnCardToPanel(cardId) {
-            // Remove placed card
-            const placedCard = document.querySelector(`[data-placed-card="${cardId}"]`);
-            if (placedCard) {
-                placedCard.remove();
-            }
-            
-            // Show original card
             const originalCard = document.querySelector(`[data-card="${cardId}"]`);
-            if (originalCard) {
-                originalCard.style.display = 'block';
-            }
+            if (originalCard) originalCard.classList.remove('placed');
             
             placedCards.delete(cardId);
+            showStatus(`"${cardTitles[cardId]}" returned to panel`, false);
+            
+            // Update region dots
+            updateRegionDots();
         }
 
-        function resetCards() {
-            // Clean up any ongoing drag operations
-            cleanupDrag();
+        // DETAILS MODAL
+        function openDetailsModal(cardId) {
+            const data = cardDetails[cardId];
+            if (!data) return;
+
+            document.getElementById('detailsTitle').textContent = data.title;
+            document.getElementById('detailsPOV').textContent = data.pov;
+            document.getElementById('detailsDescription').innerHTML = data.description;
             
-            // Remove all placed cards
-            const placedCardElements = document.querySelectorAll('.placed-card');
-            placedCardElements.forEach(card => card.remove());
+            const links = document.getElementById('detailsLinks');
+            links.innerHTML = '';
+            data.links.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.target = '_blank';
+                a.className = 'details-modal-link';
+                a.textContent = link.text;
+                links.appendChild(a);
+            });
+
+            document.getElementById('detailsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // SHOW DEBUG MARKERS for all regions
+        function showDebugMarkers() {
+            console.log('🎯 SHOWING DEBUG MARKERS...');
+            const container = document.getElementById('venn-container');
             
-            // Show all original cards
-            const originalCards = document.querySelectorAll('.card-item');
-            originalCards.forEach(card => {
-                card.style.display = 'block';
-                card.style.opacity = '1';
-                card.style.transform = '';
+            // Remove existing debug markers
+            container.querySelectorAll('.debug-marker').forEach(marker => marker.remove());
+            
+            Object.entries(regionPositions).forEach(([region, pos]) => {
+                const marker = document.createElement('div');
+                marker.className = 'debug-marker';
+                marker.style.position = 'absolute';
+                marker.style.width = '20px';
+                marker.style.height = '20px';
+                marker.style.borderRadius = '50%';
+                marker.style.border = '3px solid purple';
+                marker.style.background = 'yellow';
+                marker.style.zIndex = '9999';
+                marker.style.fontSize = '10px';
+                marker.style.display = 'flex';
+                marker.style.alignItems = 'center';
+                marker.style.justifyContent = 'center';
+                marker.style.fontWeight = 'bold';
+                marker.title = region;
+                
+                // Convert SVG to pixel coordinates
+                const svg = container.querySelector('.venn-svg');
+                const svgRect = svg.getBoundingClientRect();
+                const scaleX = svgRect.width / 900;
+                const scaleY = svgRect.height / 650;
+                const pixelX = pos.x * scaleX - 10;
+                const pixelY = pos.y * scaleY - 10;
+                
+                marker.style.left = pixelX + 'px';
+                marker.style.top = pixelY + 'px';
+                marker.textContent = Object.keys(regionPositions).indexOf(region) + 1;
+                
+                container.appendChild(marker);
+                console.log(`📍 Added marker for ${region} at SVG(${pos.x},${pos.y}) -> Pixel(${pixelX},${pixelY})`);
             });
             
-            // Restore body scrolling
-            document.body.style.overflow = 'auto';
-            document.body.style.position = 'static';
-            document.body.style.width = 'auto';
-            
-            // Clear the placedCards Map
+            showStatus('Debug markers shown - purple circles with yellow centers mark each region!', false);
+        }
+
+        // UTILITY FUNCTIONS
+        function resetCards() {
+            document.querySelectorAll('.region-dot').forEach(dot => dot.remove());
+            document.querySelectorAll('.card-item').forEach(card => card.classList.remove('placed'));
             placedCards.clear();
+            closeQuestionsModal();
+            closeDetailsModal();
+            showStatus('All cards reset!', false);
+            
+            // Recreate empty region dots
+            setTimeout(createRegionDots, 100);
         }
 
         function showSolution() {
             document.getElementById('solution-legend').style.display = 'block';
+            document.getElementById('solution-circles').style.display = 'block';
+            showStatus('Showing proposed solution', false);
         }
 
         function hideSolution() {
             document.getElementById('solution-legend').style.display = 'none';
+            document.getElementById('solution-circles').style.display = 'none';
+            showStatus('Hidden solution', false);
         }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeQuestionsModal();
+                closeDetailsModal();
+            }
+        });
     </script>
 </body>
 </html>
