@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Information Science and information specialists working with AI, designing with AI and developing for AI - Interactive Venn Diagram Exercise</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
+<style>
         * {
             box-sizing: border-box;
         }
@@ -39,11 +39,25 @@
             font-weight: 700;
             line-height: 1.2;
         }
+        
+        /* Larger font on bigger screens */
+        @media (min-width: 768px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+        }
 
         .main-container {
             display: grid;
             grid-template-columns: 300px 1fr;
-            gap: 1rem;
+            gap: 0.5rem; /* Reduced gap */
             max-width: 1400px;
             margin: 0 auto;
         }
@@ -62,6 +76,12 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             text-align: center;
+        }
+        
+        @media (min-width: 1200px) {
+            .cards-title {
+                font-size: 1.1rem;
+            }
         }
 
         .card-item {
@@ -119,11 +139,23 @@
             margin-bottom: 0.3rem;
             padding-right: 2rem;
         }
+        
+        @media (min-width: 1200px) {
+            .card-title {
+                font-size: 1rem;
+            }
+        }
 
         .card-pov {
             font-size: 0.6rem;
             color: #666;
             font-style: italic;
+        }
+        
+        @media (min-width: 1200px) {
+            .card-pov {
+                font-size: 0.8rem;
+            }
         }
 
         .click-hint {
@@ -148,6 +180,13 @@
             text-align: center !important;
             display: block !important;
         }
+        
+        @media (min-width: 1200px) {
+            .assign-btn {
+                font-size: 0.8rem !important;
+                padding: 0.7rem 1rem !important;
+            }
+        }
 
         .assign-btn:hover {
             background: #2a4aa3 !important;
@@ -157,11 +196,11 @@
 
         .venn-container {
             position: relative;
-            height: 600px;
+            height: 650px; /* Increased base height */
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             overflow: hidden;
-            padding: 10px;
+            padding: 5px; /* Reduced padding */
         }
 
         .venn-svg {
@@ -192,6 +231,13 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             text-anchor: middle;
             pointer-events: none;
+        }
+        
+        @media (min-width: 1200px) {
+            .zone-label {
+                font-size: 20px;
+                text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+            }
         }
 
         .placed-card {
@@ -280,6 +326,12 @@
             margin-bottom: 1rem;
             text-align: center;
         }
+        
+        @media (min-width: 1200px) {
+            .modal-title {
+                font-size: 1.2rem;
+            }
+        }
 
         .modal-instruction {
             text-align: center;
@@ -348,6 +400,12 @@
             color: #333;
             font-size: 1rem;
         }
+        
+        @media (min-width: 1200px) {
+            .question-text {
+                font-size: 1.2rem;
+            }
+        }
 
         .modal-buttons {
             display: flex;
@@ -366,6 +424,13 @@
             font-weight: 600;
             transition: all 0.3s ease;
             font-size: 0.7rem;
+        }
+        
+        @media (min-width: 1200px) {
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.2rem;
+            }
         }
 
         .btn:hover {
@@ -454,6 +519,12 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
+        
+        @media (min-width: 1200px) {
+            .details-modal-title {
+                font-size: 1.8rem;
+            }
+        }
 
         .details-modal-pov {
             background: linear-gradient(135deg, #355cc9, #4a90e2);
@@ -464,12 +535,26 @@
             font-weight: 600;
             display: inline-block;
         }
+        
+        @media (min-width: 1200px) {
+            .details-modal-pov {
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+            }
+        }
 
         .details-modal-description {
             color: #333;
             line-height: 1.6;
             margin: 1.5rem 0;
             font-size: 1rem;
+        }
+        
+        @media (min-width: 1200px) {
+            .details-modal-description {
+                font-size: 1.1rem;
+                line-height: 1.7;
+            }
         }
 
         .details-modal-links {
@@ -491,6 +576,13 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+        
+        @media (min-width: 1200px) {
+            .details-modal-link {
+                font-size: 1rem;
+                padding: 0.7rem 1.4rem;
+            }
         }
 
         .details-modal-link:hover {
@@ -519,10 +611,23 @@
             font-size: 1rem;
             text-align: center;
         }
+        
+        @media (min-width: 1200px) {
+            .legend h3 {
+                font-size: 1.2rem;
+            }
+        }
 
         .legend-section {
             margin-bottom: 0.8rem;
             font-size: 0.8rem;
+        }
+        
+        @media (min-width: 1200px) {
+            .legend-section {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
         }
 
         .legend-title {
@@ -540,6 +645,13 @@
             display: inline-block;
             border: 1px solid rgba(255,255,255,0.3);
         }
+        
+        @media (min-width: 1200px) {
+            .colour-indicator {
+                width: 15px;
+                height: 15px;
+            }
+        }
 
         .red { background-color: #ff4444; }
         .blue { background-color: #4444ff; }
@@ -553,6 +665,14 @@
             line-height: 1.3;
             padding-left: 0.5rem;
         }
+        
+        @media (min-width: 1200px) {
+            .legend-items {
+                font-size: 0.8rem;
+                line-height: 1.4;
+                padding-left: 0.8rem;
+            }
+        }
 
         /* Solution diagram styles */
         .solution-diagram {
@@ -561,15 +681,7 @@
             padding: 1rem;
             margin-top: 1rem;
             position: relative;
-            height: 300px;
-        }
-
-        .solution-diagram h4 {
-            color: white;
-            text-align: center;
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
-            font-weight: 700;
+            height: 400px; /* Increased from 300px */
         }
 
         .solution-svg {
@@ -590,6 +702,12 @@
             text-anchor: middle;
             pointer-events: none;
         }
+        
+        @media (min-width: 1200px) {
+            .solution-text {
+                font-size: 12px;
+            }
+        }
 
         .status-message {
             background: rgba(0,255,0,0.3);
@@ -609,19 +727,19 @@
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
-                gap: 1rem;
+                gap: 0.5rem; /* Reduced gap */
             }
             
             .cards-panel {
                 order: 2;
-                max-height: 25vh;
+                max-height: 30vh; /* Increased from 25vh */
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
             
             .venn-container {
-                height: 70vh;
-                margin-bottom: 1rem;
+                height: 75vh; /* Increased from 70vh */
+                margin-bottom: 0.5rem; /* Reduced from 1rem */
             }
             
             .header h1 {
@@ -643,11 +761,13 @@
 
         @media (max-width: 768px) {
             .venn-container {
-                height: 65vh;
+                height: 80vh; /* Increased from 65vh */
+                padding: 5px; /* Reduced padding */
             }
             
             .cards-panel {
-                max-height: 20vh;
+                max-height: 30vh; /* Increased from 20vh */
+                padding: 0.8rem; /* Reduced padding */
             }
             
             .zone-label {
@@ -664,6 +784,12 @@
             .simple-modal-content {
                 margin: 5% auto;
                 padding: 1.5rem;
+            }
+            
+            /* Make solution diagram bigger on small screens */
+            .solution-diagram {
+                height: 350px;
+                padding: 0.5rem;
             }
         }
 
@@ -704,6 +830,15 @@
         .region-dot.size-3 { min-width: 50px; min-height: 50px; font-size: 10px; }
         .region-dot.size-4 { min-width: 60px; min-height: 60px; font-size: 9px; }
         .region-dot.size-5 { min-width: 70px; min-height: 70px; font-size: 8px; }
+        
+        /* Larger dots on bigger screens */
+        @media (min-width: 1200px) {
+            .region-dot.size-1 { min-width: 35px; min-height: 35px; font-size: 13px; }
+            .region-dot.size-2 { min-width: 45px; min-height: 45px; font-size: 12px; }
+            .region-dot.size-3 { min-width: 55px; min-height: 55px; font-size: 11px; }
+            .region-dot.size-4 { min-width: 65px; min-height: 65px; font-size: 10px; }
+            .region-dot.size-5 { min-width: 75px; min-height: 75px; font-size: 9px; }
+        }
 
         @media (max-width: 768px) {
             .region-dot.size-1 { min-width: 25px; min-height: 25px; font-size: 10px; }
@@ -723,11 +858,17 @@
 
         @media (min-width: 1400px) {
             .venn-container {
-                height: 650px;
+                height: 700px; /* Increased from 650px */
             }
             
             .zone-label {
-                font-size: 18px;
+                font-size: 22px; /* Increased from 18px */
+                font-weight: 700;
+            }
+            
+            /* Make solution diagram even bigger on large screens */
+            .solution-diagram {
+                height: 450px;
             }
         }
     </style>
